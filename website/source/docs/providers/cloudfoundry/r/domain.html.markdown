@@ -28,7 +28,7 @@ The following example creates a private domain owned by the Org referenced by `c
 ```
 resource "cf_domain" "private" {
     name = "pcfdev-org.io"
-  org = "${cf_org.pcfdev-org.id}"
+    org = "${cf_org.pcfdev-org.id}"
 }
 ```
 
