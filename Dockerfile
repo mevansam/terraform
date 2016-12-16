@@ -3,10 +3,11 @@ MAINTAINER "XX"
 
 ENV TERRAFORM_VERSION=0.8.1
 
+
 RUN wget https://concourse.ci/downloads.html
 RUN cat downloads.html
 
-RUN apk add --update git bash
+RUN http_proxy=http://172.24.248.61:8080 https_proxy=http://172.24.248.61:8080 apk add --update git bash
 
 ENV TF_DEV=true
 
