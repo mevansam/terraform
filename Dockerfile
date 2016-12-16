@@ -3,6 +3,9 @@ MAINTAINER "XX"
 
 ENV TERRAFORM_VERSION=0.8.1
 
+RUN wget https://concourse.ci/downloads.html
+RUN cat downloads.html
+
 RUN apk add --update git bash
 
 ENV TF_DEV=true
