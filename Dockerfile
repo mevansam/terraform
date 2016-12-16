@@ -2,7 +2,6 @@ FROM golang:alpine
 MAINTAINER "XX"
 
 ENV TERRAFORM_VERSION=0.8.1
-COPY resolv.conf /etc/resolv.comf
 
 RUN apk add --update git bash
 
