@@ -8,7 +8,7 @@ RUN http_proxy=http://172.24.248.61:8080 https_proxy=http://172.24.248.61:8080 a
 ENV TF_DEV=true
 
 WORKDIR $GOPATH/src/github.com/hashicorp/terraform
-RUN git clone https://github.com/mevansam/terraform.git ./ && \
+RUN http_proxy=http://172.24.248.61:8080 https_proxy=http://172.24.248.61:8080 git clone https://github.com/mevansam/terraform.git ./ && \
     /bin/bash scripts/build.sh
 
 WORKDIR $GOPATH
