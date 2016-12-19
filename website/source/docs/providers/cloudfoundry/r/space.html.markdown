@@ -20,9 +20,7 @@ resource "cf_space" "s1" {
     org = "${cf_org.o1.id}"
     quota = "${cf_quota.dev.id}"
     asgs = [ "${cf_asg.svc.id}" ]
-    managers = [ 
-        "${cf_user.tl.id}" 
-    ]
+    managers = [ "${cf_user.tl.id}" ]
     developers = [ 
         "${cf_user.tl.id}",
         "${cf_user.dev1.id}",
