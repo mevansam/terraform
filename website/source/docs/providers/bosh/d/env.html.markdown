@@ -32,7 +32,7 @@ data "bosh_env" "e1" {
 
 The following arguments are supported:
 
-* `target` - (required) Bosh target. This can also be specified with the `BOSH_TARGET` shell environment variable. This target can point to an endpoint which will has been deployed by a [`bosh_deployment`](/docs/providers/bosh/r/deployment.html) resource, as shown in the example above. By referencing the deployment resource you ensure that the bosh environment has deployed correctly before using it manage distributed deployments.
+* `target` - (required) Bosh target. This can also be specified with the `BOSH_TARGET` shell environment variable. This target can point to an endpoint which has been deployed by a [`bosh_deployment`](/docs/providers/bosh/r/deployment.html) resource, as shown in the example above. By referencing the deployment resource you ensure that the bosh environment has deployed correctly before using it manage distributed deployments.
 
 * `user` - (optional) The Bosh user. Defaults to "admin". This can also be 
 specified with the `BOSH_USER` shell environment variable.
