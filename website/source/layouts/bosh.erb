@@ -1,0 +1,100 @@
+<% wrap_layout :inner do %>
+	<% content_for :sidebar do %>
+		<div class="docs-sidebar hidden-print affix-top" role="complementary">
+			<ul class="nav docs-sidenav">
+				<li<%= sidebar_current("docs-home") %>>
+				<a href="/docs/providers/index.html">&laquo; Documentation Home</a>
+                </li>
+
+				<li<%= sidebar_current("docs-bosh-index") %>>
+				<a href="/docs/providers/bosh/index.html">Bosh Provider</a>
+                </li>
+
+				<li<%= sidebar_current(/^docs-bosh-datasource/) %>>
+					<a href="#">Data Sources</a>
+					<ul class="nav nav-visible">
+						<li<%= sidebar_current("docs-bosh-datasource-env") %>>
+							<a href="/docs/providers/bosh/d/env.html">bosh_env</a>
+						</li>
+					</ul>
+				</li>
+
+				<li<%= sidebar_current(/^docs-bosh-resource-cpi/) %>>
+					<a href="#">CPI</a>
+					<ul class="nav nav-visible">
+						<li<%= sidebar_current("docs-bosh-resource-cpi-aws") %>>
+							<a href="/docs/providers/bosh/r/aws_cpi.html">bosh_aws_cpi</a>
+						</li>
+						<li<%= sidebar_current("docs-bosh-resource-cpi-azure") %>>
+							<a href="/docs/providers/bosh/r/azure_cpi.html">bosh_azure_cpi</a>
+						</li>
+						<li<%= sidebar_current("docs-bosh-resource-cpi-openstack") %>>
+							<a href="/docs/providers/bosh/r/openstack_cpi.html">bosh_openstack_cpi</a>
+						</li>
+						<li<%= sidebar_current("docs-bosh-resource-cpi-vcenter") %>>
+							<a href="/docs/providers/bosh/r/vcenter_cpi.html">bosh_vcenter_cpi</a>
+						</li>
+					</ul>
+				</li>
+
+				<li<%= sidebar_current(/^docs-bosh-resource-infrastructure/) %>>
+					<a href="#">Infrastructure</a>
+					<ul class="nav nav-visible">
+						<li<%= sidebar_current("docs-bosh-resource-infrastructure-az") %>>
+							<a href="/docs/providers/bosh/r/az.html">bosh_az</a>
+						</li>
+						<li<%= sidebar_current("docs-bosh-resource-infrastructure-manual-network") %>>
+							<a href="/docs/providers/bosh/r/manual_network.html">bosh_manual_network</a>
+						</li>
+						<li<%= sidebar_current("docs-bosh-resource-infrastructure-dynamic-network") %>>
+							<a href="/docs/providers/bosh/r/dynamic_network.html">bosh_dynamic_network</a>
+						</li>
+						<li<%= sidebar_current("docs-bosh-resource-infrastructure-vip-network") %>>
+							<a href="/docs/providers/bosh/r/vip_network.html">bosh_vip_network</a>
+						</li>
+						<li<%= sidebar_current("docs-bosh-resource-infrastructure-vm-type") %>>
+							<a href="/docs/providers/bosh/r/vm_type.html">bosh_vm_type</a>
+						</li>
+						<li<%= sidebar_current("docs-bosh-resource-infrastructure-vm-extension") %>>
+							<a href="/docs/providers/bosh/r/vm_extension.html">bosh_vm_extension</a>
+						</li>
+						<li<%= sidebar_current("docs-bosh-resource-infrastructure-disk-type") %>>
+							<a href="/docs/providers/bosh/r/disk_type.html">bosh_disk_type</a>
+						</li>
+						<li<%= sidebar_current("docs-bosh-resource-infrastructure-cloud-config") %>>
+							<a href="/docs/providers/bosh/r/cloud_config.html">bosh_cloud_config</a>
+						</li>
+					</ul>
+				</li>
+
+				<li<%= sidebar_current(/^docs-bosh-resource-deployment/) %>>
+					<a href="#">Deployment</a>
+					<ul class="nav nav-visible">
+						<li<%= sidebar_current("docs-bosh-resource-deployment-release") %>>
+							<a href="/docs/providers/bosh/r/release.html">bosh_release</a>
+						</li>
+						<li<%= sidebar_current("docs-bosh-resource-deployment-stemcell") %>>
+							<a href="/docs/providers/bosh/r/stemcell.html">bosh_stemcell</a>
+						</li>
+						<li<%= sidebar_current("docs-bosh-resource-deployment-job") %>>
+							<a href="/docs/providers/bosh/r/job.html">bosh_job</a>
+						</li>
+						<li<%= sidebar_current("docs-bosh-resource-deployment-instance-group") %>>
+							<a href="/docs/providers/bosh/r/instance_group.html">bosh_instance_group</a>
+						</li>
+						<!--
+						<li<%= sidebar_current("docs-bosh-resource-deployment-tag") %>>
+							<a href="/docs/providers/bosh/r/tag.html">bosh_tag</a>
+						</li>
+						-->
+						<li<%= sidebar_current("docs-bosh-resource-deployment-deployment") %>>
+							<a href="/docs/providers/bosh/r/deployment.html">bosh_deployment</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	<% end %>
+
+	<%= yield %>
+	<% end %>
