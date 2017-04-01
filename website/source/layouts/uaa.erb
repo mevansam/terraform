@@ -1,0 +1,43 @@
+<% wrap_layout :inner do %>
+	<% content_for :sidebar do %>
+		<div class="docs-sidebar hidden-print affix-top" role="complementary">
+			<ul class="nav docs-sidenav">
+				<li<%= sidebar_current("docs-home") %>>
+				<a href="/docs/providers/index.html">&laquo; Documentation Home</a>
+                </li>
+
+				<li<%= sidebar_current("docs-uaa-index") %>>
+				<a href="/docs/providers/uaa/index.html">UAA Provider</a>
+                </li>
+
+				<!--
+				<li<%= sidebar_current(/^docs-uaa-datasource/) %>>
+				<a href="#">Data Sources</a>
+                <ul class="nav nav-visible">
+                    <li<%= sidebar_current("docs-uaa-datasource-info") %>>
+					<a href="/docs/providers/uaa/d/info.html">uaa_info</a>
+					</li>
+				</ul>
+				</li>
+				-->
+
+				<li<%= sidebar_current(/^docs-uaa-resource/) %>>
+				<a href="#">Resources</a>
+                <ul class="nav nav-visible">
+                    <li<%= sidebar_current("docs-uaa-resource-client") %>>
+					<a href="/docs/providers/uaa/r/client.html">uaa_client</a>
+					</li>
+                    <li<%= sidebar_current("docs-uaa-resource-group") %>>
+					<a href="/docs/providers/uaa/r/group.html">uaa_group</a>
+					</li>
+                    <li<%= sidebar_current("docs-uaa-resource-user") %>>
+					<a href="/docs/providers/uaa/r/user.html">uaa_user</a>
+					</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+	<% end %>
+
+	<%= yield %>
+	<% end %>
