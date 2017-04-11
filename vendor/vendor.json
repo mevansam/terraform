@@ -2846,6 +2846,12 @@
 			"revisionTime": "2017-02-07T21:56:28Z"
 		},
 		{
+			"checksumSHA1": "ZmCe1pOWTr83ruH8D78fsixE8y0=",
+			"path": "github.com/scottdware/go-bigip",
+			"revision": "c794a5a0d4c0b85783600459852c93c1000a7702",
+			"revisionTime": "2016-09-15T00:36:19Z"
+		},
+		{
 			"checksumSHA1": "tEKRyau4iRjmq2iwJbduD9RhN5s=",
 			"path": "github.com/sean-/postgresql-acl",
 			"revision": "d10489e5d217ebe9c23470c4d0ba7081a6d1e799",
