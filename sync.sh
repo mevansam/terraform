@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -x
+set -e
+
+if [[ -z $1 ]] || [[ $1 == master ]]; then
+    git checkout master
+    git fetch upstream
+    git rebase upstream/master
+    git push
+fi
+
+if [[ -z $1 ]] || [[ $1 == cf ]]; then
+    git checkout ab_cf_provider_v2
+    git rebase -s recursive -X theirs master
+    git pull --strategy-option theirs
+    # git push
+fi
+
+if [[ -z $1 ]] || [[ $1 == bigip ]]; then
+    git checkout ab_bigip_provider
+    git rebase -s recursive -X theirs master
+    git pull --strategy-option theirs
+    # git push
+fi
+
+if [[ -z $1 ]] || [[ $1 == dev_release ]]; then
+    git checkout ab_dev_release_v2
+    git merge --strategy-option theirs ab_cf_provider_v2
+    git merge --strategy-option theirs ab_bigip_provider
+    # git push
+else
+    git checkout ab_dev_release
+fi
+
+set +x
+set +e
+
+# If a rebase fails then use the following
+# scriplet to fix the file copies
+
+alias gitrebfix='for f in $(find . -name "*~master" -print); do n=$(basename "$f"); n="${n%.*}"; mv $f $n.go; done'
