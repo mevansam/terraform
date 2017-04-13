@@ -28,7 +28,6 @@ if [[ -z $1 ]] || [[ $1 == dev_release ]]; then
     git checkout ab_dev_release_v2
     git merge --strategy-option theirs ab_cf_provider_v2
     git merge --strategy-option theirs ab_bigip_provider
-    git push
     git push -u publish ab_dev_release_v2:master
 else
     git checkout ab_dev_release
