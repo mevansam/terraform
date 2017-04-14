@@ -5,12 +5,21 @@ Terraform
 
 [![wercker status](https://app.wercker.com/status/7bcf32b26184e3d19df3e12198666836/m/master "wercker status")](https://app.wercker.com/project/byKey/7bcf32b26184e3d19df3e12198666836)
 
-This repository contains a custom build of the latest [Terraform](https://www.terraform.io) source including the following providers.
+This repository is used to publish a custom build of the latest [Terraform](https://www.terraform.io) source for the following providers to this [website](https://terraform.cfapps.io/).
 
 * [Cloud Foundry](https://github.com/mevansam/terraform/tree/ab_cf_provider_v2/builtin/providers/cf)
-* [BIG IP](https://github.com/DealerDotCom/terraform-provider-bigip)
+* [BIGIP](https://github.com/DealerDotCom/terraform-provider-bigip)
 
-This build is provded as is with no warranty under the same [Mozilla Public License v2](https://www.mozilla.org/en-US/MPL/2.0/) as that of Terraform core. Please do not fork this repository as is used to publish the [website](https://terraform.cfapps.io/), which includes the documentation for the additional providers including download links for the pre-build binaries.
+To contribute or submit issues against the above providers, please do so to the following fork of the Terraform core repository.
+
+* https://github.com/mevansam/terraform
+
+The respective branches for the providers are.
+
+* Cloud Foundry: [ab_cf_provider_v2](https://github.com/mevansam/terraform/tree/ab_cf_provider_v2)
+* BIGIP: [ab_bigip_provider](https://github.com/mevansam/terraform/tree/ab_bigip_provider)
+
+The builds published by this repository are provded as is with no warranty under the same [Mozilla Public License v2](https://www.mozilla.org/en-US/MPL/2.0/) as that of Terraform core. Please do not fork this repository as it is used to publish the [website](https://terraform.cfapps.io/), which includes the documentation for the additional providers including download links for the pre-built binaries. 
 
 ---
 
