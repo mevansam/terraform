@@ -13,7 +13,7 @@ Provides a resource for modifying the default staging or running
 
 ## Example Usage
 
-The following example shows how to apply [application security groups](http://localhost:4567/docs/providers/cloudfoundry/r/asg.html)
+The following example shows how to apply [application security groups](/docs/providers/cloudfoundry/r/asg.html)
 defined elsewhere in the Terraform configuration, to the default running set.  
 
 ```
