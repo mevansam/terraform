@@ -175,9 +175,10 @@ func resourceSpaceUpdate(d *schema.ResourceData, meta interface{}) (err error) {
 		var asgs []interface{}
 
 		space := cfapi.CCSpace{
-			ID:      d.Id(),
-			Name:    d.Get("name").(string),
-			OrgGUID: d.Get("org").(string),
+			ID:       d.Id(),
+			Name:     d.Get("name").(string),
+			OrgGUID:  d.Get("org").(string),
+			AllowSSH: d.Get("allow_ssh").(bool),
 		}
 		if v, ok := d.GetOk("quota"); ok {
 			space.QuotaGUID = v.(string)

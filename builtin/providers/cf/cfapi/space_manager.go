@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 
 	"code.cloudfoundry.org/cli/cf/api/resources"
@@ -146,7 +145,7 @@ func (sm *SpaceManager) UpdateSpace(space CCSpace, asgs []interface{}) (err erro
 		"name":                        space.Name,
 		"organization_guid":           space.OrgGUID,
 		"space_quota_definition_guid": space.QuotaGUID,
-		"allow_ssh":                   strconv.FormatBool(space.AllowSSH),
+		"allow_ssh":                   space.AllowSSH,
 	}
 	if len(asgs) > 0 {
 		payload["security_group_guids"] = asgs
