@@ -27,8 +27,8 @@ resource "cf_service_instance" "redis1" {
 The following arguments are supported:
 
 * `name` - (Required) The name of the Service Instance in Cloud Foundry
-* `servicePlan` - (Required) The ID of the [service plan](http://localhost:4567/docs/providers/cloudfoundry/d/service_plan.html)
-* `space` - (Required) The ID of the [space](http://localhost:4567/docs/providers/cloudfoundry/r/space.html) 
+* `servicePlan` - (Required) The ID of the [service plan](/docs/providers/cloudfoundry/d/service_plan.html)
+* `space` - (Required) The ID of the [space](/docs/providers/cloudfoundry/r/space.html) 
 * `jsonParameters` - (Optional) List of arbitrary parameters. Some services support providing additional configuration parameters within the provision request
 * `tags` - (Optional) List of instance tags. Some services provide a list of tags that Cloud Foundry delivers in [VCAP_SERVICES Env variables](https://docs.cloudfoundry.org/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES)
 

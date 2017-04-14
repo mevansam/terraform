@@ -14,7 +14,7 @@ Provides a resource for managing shared or private
 ## Example Usage
 
 The following is an example of a shared domain for a sub-domain of the default application domain 
-retrieved via a [domain data source](http://localhost:4567/docs/providers/cloudfoundry/d/domain.html).
+retrieved via a [domain data source](/docs/providers/cloudfoundry/d/domain.html).
 
 ```
 resource "cf_domain" "shared" {

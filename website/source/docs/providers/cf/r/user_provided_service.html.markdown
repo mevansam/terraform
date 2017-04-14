@@ -31,7 +31,7 @@ resource "cf_user_provided_service" "mq" {
 The following arguments are supported:
 
 * `name` - (Required) The name of the Service Instance in Cloud Foundry
-* `space` - (Required) The ID of the [space](http://localhost:4567/docs/providers/cloudfoundry/r/space.html) 
+* `space` - (Required) The ID of the [space](/docs/providers/cloudfoundry/r/space.html) 
 * `credentials` - (Optional) Arbitrary credentials in the form of key-value pairs and delivered to applications via [VCAP_SERVICES Env variables](https://docs.cloudfoundry.org/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES)
 * `syslogDrainURL` - (Optional) URL to which logs for bound applications will be streamed
 * `routeServiceURL` - (Optional) URL to which requests for bound routes will be forwarded. Scheme for this URL must be https
