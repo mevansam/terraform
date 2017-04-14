@@ -1,11 +1,13 @@
 Terraform
 =========
 
+https://terraform.cfapps.io/
+
 # Overview
 
 [![wercker status](https://app.wercker.com/status/7bcf32b26184e3d19df3e12198666836/m/master "wercker status")](https://app.wercker.com/project/byKey/7bcf32b26184e3d19df3e12198666836)
 
-This repository is used to publish a custom build of the latest [Terraform](https://www.terraform.io) source for the following providers to this [website](https://terraform.cfapps.io/).
+This repository is used to publish a custom build of the latest [Terraform](https://www.terraform.io) source for the following providers.
 
 * [Cloud Foundry](https://github.com/mevansam/terraform/tree/ab_cf_provider_v2/builtin/providers/cf)
 * [BIGIP](https://github.com/DealerDotCom/terraform-provider-bigip)
@@ -23,11 +25,10 @@ The builds published by this repository are provded as is with no warranty under
 
 ---
 
-- Website: https://www.terraform.io
+- Official Website: https://www.terraform.io
 - [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
 - Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
 
-![Terraform](https://rawgithub.com/hashicorp/terraform/master/website/source/assets/images/logo-hashicorp.svg)
 
 Terraform is a tool for building, changing, and versioning infrastructure safely and efficiently. Terraform can manage existing and popular service providers as well as custom in-house solutions.
 
