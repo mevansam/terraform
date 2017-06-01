@@ -1,8 +1,6 @@
 package cloudfoundry
 
-import (
-	"github.com/hashicorp/terraform/builtin/providers/cf/cfapi"
-)
+import "github.com/hashicorp/terraform/builtin/providers/cf/cfapi"
 
 // Config -
 type Config struct {

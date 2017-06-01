@@ -118,7 +118,6 @@ func newUserManager(config coreconfig.Reader, uaaGateway net.Gateway, ccGateway 
 
 		repo: api.NewCloudControllerUserRepository(config, uaaGateway, ccGateway),
 	}
-	err = um.loadGroups()
 	return
 }
 

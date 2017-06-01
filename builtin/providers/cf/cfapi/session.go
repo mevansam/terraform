@@ -84,6 +84,7 @@ func NewSession(
 	err = s.initCliConnection(endpoint, user, password, caCert, skipSslValidation)
 	if err == nil && len(uaaClientID) > 0 {
 		s.userManager.clientToken, err = s.authManager.getClientToken(uaaClientID, uaaClientSecret)
+		err = s.userManager.loadGroups()
 	}
 	return
 }
