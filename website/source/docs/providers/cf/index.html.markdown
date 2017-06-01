@@ -26,7 +26,7 @@ variable "uaa_admin_client_secret" {}
 
 # Configure the CloudFoundry Provider
 
-provider "cloudfoundry" {
+provider "cf" {
     api_url = "${var.api_url}"
     user = "admin"
     password = "${var.admin_password}"
