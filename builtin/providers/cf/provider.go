@@ -13,27 +13,27 @@ func Provider() terraform.ResourceProvider {
 			"api_url": &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("CF_API_URL", nil),
+				DefaultFunc: schema.EnvDefaultFunc("CF_API_URL", ""),
 			},
 			"user": &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("CF_USER", "admin"),
+				DefaultFunc: schema.EnvDefaultFunc("CF_USER", ""),
 			},
 			"password": &schema.Schema{
 				Type:        schema.TypeString,
 				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("CF_PASSWORD", nil),
+				DefaultFunc: schema.EnvDefaultFunc("CF_PASSWORD", ""),
 			},
 			"uaa_client_id": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("CF_UAA_CLIENT_ID", "admin"),
+				DefaultFunc: schema.EnvDefaultFunc("CF_UAA_CLIENT_ID", ""),
 			},
 			"uaa_client_secret": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("CF_UAA_CLIENT_SECRET", nil),
+				DefaultFunc: schema.EnvDefaultFunc("CF_UAA_CLIENT_SECRET", ""),
 			},
 			"ca_cert": &schema.Schema{
 				Type:        schema.TypeString,

@@ -25,10 +25,12 @@ func NewLogger(debug bool, tracePath string) *Logger {
 
 	l := &Logger{}
 
-	if _, err := os.Stat(tracePath); os.IsExist(err) {
+	if strings.ToLower(tracePath) == "true" {
+		l.TracePrinter = trace.NewLogger(os.Stdout, true, "", "")
+	} else if len(tracePath) > 0 {
 		l.TracePrinter = trace.NewLogger(os.Stdout, true, tracePath, "")
 	} else {
-		l.TracePrinter = trace.NewLogger(os.Stdout, strings.ToLower(tracePath) == "true", "", "")
+		l.TracePrinter = trace.NewLogger(os.Stdout, false, "", "")
 	}
 
 	l.UI = terminal.NewUI(os.Stdin, os.Stdout, terminal.NewTeePrinter(os.Stdout), l.TracePrinter)
@@ -59,6 +61,6 @@ func (l *Logger) DebugMessage(format string, v ...interface{}) {
 			}
 		}
 		hdr := terminal.HeaderColor(fmt.Sprintf("[%s] DEBUG:", time.Now().Format(time.RFC3339)))
-		l.UI.Say(fmt.Sprintf("%s %s", hdr, format), vv...)
+		l.TracePrinter.Printf(fmt.Sprintf("%s %s", hdr, format), vv...)
 	}
 }
