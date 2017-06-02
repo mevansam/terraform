@@ -38,4 +38,4 @@ The following arguments are supported:
 The following attributes are exported:
 
 * `id` - The GUID of the service broker
-* `services_plans` - Map of service plan GUIDs keyed by service "&lt;service name&gt;/&lt;plan name&gt;"
+* `service_plans` - Map of service plan GUIDs keyed by service "&lt;service name&gt;/&lt;plan name&gt;"
