@@ -29,6 +29,7 @@ type Session struct {
 	uaaGateway net.Gateway
 
 	authManager    *AuthManager
+	stackManager   *StackManager
 	userManager    *UserManager
 	domainManager  *DomainManager
 	asgManager     *ASGManager
@@ -161,6 +162,10 @@ func (s *Session) initCliConnection(
 	if err != nil {
 		return err
 	}
+	s.stackManager, err = newStackManager(s.config, s.ccGateway, s.Log)
+	if err != nil {
+		return err
+	}
 	s.domainManager, err = newDomainManager(s.config, s.ccGateway, s.Log)
 	if err != nil {
 		return err
@@ -200,6 +205,11 @@ func (s *Session) Info() *CCInfo {
 // UserManager -
 func (s *Session) UserManager() *UserManager {
 	return s.userManager
+}
+
+// StackManager -
+func (s *Session) StackManager() *StackManager {
+	return s.stackManager
 }
 
 // DomainManager -
