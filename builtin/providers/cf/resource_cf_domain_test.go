@@ -26,6 +26,23 @@ resource "cf_domain" "shared" {
 }
 `
 
+const domainResourceSharedTCP = `
+
+data "cf_router_group" "tcp" {
+    name = "default-tcp"
+}
+
+data "cf_domain" "apps" {
+    sub_domain = "local"
+}
+
+resource "cf_domain" "shared-tcp" {
+    sub_domain = "tcp"
+	domain = "${data.cf_domain.apps.domain}"
+	router_group = "${data.cf_router_group.tcp.id}"
+}
+`
+
 const domainResourcePrivate = `
 
 resource "cf_domain" "private" {
@@ -56,6 +73,35 @@ func TestAccSharedDomain_normal(t *testing.T) {
 							ref, "sub_domain", "dev"),
 						resource.TestCheckResourceAttr(
 							ref, "domain", "pcfdev.io"),
+					),
+				},
+			},
+		})
+}
+func TestAccSharedTCPDomain_normal(t *testing.T) {
+
+	ref := "cf_domain.shared-tcp"
+	domainname := "tcp.pcfdev.io"
+
+	resource.Test(t,
+		resource.TestCase{
+			PreCheck:     func() { testAccPreCheck(t) },
+			Providers:    testAccProviders,
+			CheckDestroy: testAccCheckSharedDomainDestroy(domainname),
+			Steps: []resource.TestStep{
+
+				resource.TestStep{
+					Config: domainResourceSharedTCP,
+					Check: resource.ComposeTestCheckFunc(
+						checkShareDomainExists(ref),
+						resource.TestCheckResourceAttr(
+							ref, "name", "tcp.pcfdev.io"),
+						resource.TestCheckResourceAttr(
+							ref, "sub_domain", "tcp"),
+						resource.TestCheckResourceAttr(
+							ref, "domain", "pcfdev.io"),
+						resource.TestCheckResourceAttr(
+							ref, "router_type", "tcp"),
 					),
 				},
 			},

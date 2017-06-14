@@ -34,7 +34,7 @@ type CCDomain struct {
 
 	// Shared domain fields
 	RouterGroupGUID string `json:"router_group_guid,omitempty"`
-	RouterTypeGUID  string `json:"router_group_type,omitempty"`
+	RouterType      string `json:"router_group_type,omitempty"`
 
 	// Private domain fields
 	OwningOrganizationGUID string `json:"owning_organization_guid,omitempty"`
