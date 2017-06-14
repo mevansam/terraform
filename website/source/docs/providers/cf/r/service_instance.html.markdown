@@ -17,8 +17,8 @@ The following is a Service Instance created within the referenced space and serv
 ```
 resource "cf_service_instance" "redis1" {
 	name = "pricing-grid"
-    space = "${cf_space.dev.id}"
-    servicePlan = "${data.cf_service_plan.redis.id}"
+  space = "${cf_space.dev.id}"
+  servicePlan = "${data.cf_service_plan.redis.id}"
 }
 ```
 

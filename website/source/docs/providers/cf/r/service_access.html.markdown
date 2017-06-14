@@ -15,8 +15,8 @@ Provides a Cloud Foundry resource for managing [access](https://docs.cloudfoundr
 The following example enables access to a specific plan of a given service broker within an Org.
 
 ```
-resource "cf_service_access" "sb" {
-    plan = "${cf_service_broker.sb1.services.my-service.plan1}"
+resource "cf_service_access" "org1-mysql-512mb" {
+    plan = "${cf_service_broker.mysql.service_plans["p-mysql/512mb"]}"
     org = "${cf_org.org1.id}"
 }
 ```

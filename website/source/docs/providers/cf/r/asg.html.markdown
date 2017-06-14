@@ -40,12 +40,15 @@ resource "cf_asg" "messaging" {
 
 The following arguments are supported:
 
-* `name` - (Required) The name of the application security group
-* `rule` - (Required) A list of egress rules with the following arguments
-  - `protocol` - (Required) One of `tcp`, `udp`, or `all`
-  - `destination` - (Required) The IP address or CIDR block that can receive traffic
-  - `ports` - (Required) A single port, comma separated ports or range of ports that can receive traffic
+* `name` - (Required) The name of the application security group.
+* `rule` - (Required) A list of egress rules with the following arguments.
+  - `protocol` - (Required) One of `icmp`, `tcp`, `udp`, or `all`.
+  - `destination` - (Required) The IP address or CIDR block that can receive traffic.
+  - `ports` - (Required) A single port, comma separated ports or range of ports that can receive traffic.
+  - `type` - (Optional) Allowed ICMP [type](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml#icmp-parameters-types).
+  - `code` - (Optional) Allowed ICMP [code](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml#icmp-parameters-codes).
   - `log` - (Optional) Set to `true` to enable logging. For more information on how to configure system logs to be sent to a syslog drain, review the [Using Log Management](https://docs.pivotal.io/pivotalcf/devguide/services/log-management.html) Services topic.
+  - `description` - (Optional) Description of the rule.
 
 ## Attributes Reference
 
