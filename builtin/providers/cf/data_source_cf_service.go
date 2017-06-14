@@ -26,6 +26,10 @@ func dataSourceService() *schema.Resource {
 				Optional: true,
 				Default:  "",
 			},
+			"service_plans": &schema.Schema{
+				Type:     schema.TypeMap,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -55,6 +59,12 @@ func dataSourceServiceRead(d *schema.ResourceData, meta interface{}) (err error)
 	}
 
 	d.SetId(service.GUID)
+
+	servicePlans, err := sm.GetServicePlans(service.GUID)
+	if err != nil {
+		return
+	}
+	d.Set("service_plans", servicePlans)
 
 	return
 }

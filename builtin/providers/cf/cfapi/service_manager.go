@@ -571,39 +571,6 @@ func (sm *ServiceManager) DeleteUserProvidedService(serviceInstanceID string) (e
 	return
 }
 
-// FindServicePlanID -
-func (sm *ServiceManager) FindServicePlanID(service string, plan string) (id string, err error) {
-
-	var offeredPlans []string
-	var servicePlans []models.ServicePlanFields
-
-	err = sm.ccGateway.ListPaginatedResources(
-		sm.apiEndpoint,
-		fmt.Sprintf("/v2/services/%s/service_plans", service),
-		resources.ServicePlanResource{},
-		func(resource interface{}) bool {
-			if sp, ok := resource.(resources.ServicePlanResource); ok {
-				servicePlans = append(servicePlans, sp.ToFields())
-			}
-			return true
-		})
-	if err != nil {
-		return
-	}
-
-	for _, v := range servicePlans {
-		if v.Name == plan {
-			id = v.GUID
-		}
-		offeredPlans = append(offeredPlans, v.Name)
-	}
-	if len(id) == 0 {
-		err = fmt.Errorf("Plan %s does not exist in service %s (%s)", plan, service, offeredPlans)
-	}
-
-	return
-}
-
 // FindSpaceService -
 func (sm *ServiceManager) FindSpaceService(label string, spaceID string) (offering models.ServiceOffering, err error) {
 
@@ -641,7 +608,44 @@ func (sm *ServiceManager) FindServiceByName(label string) (offering models.Servi
 		err = fmt.Errorf("Too many %s Services", label)
 	}
 
-	offering = offerings[0]
+	if len(offerings) > 0 {
+		offering = offerings[0]
+	} else {
+		err = fmt.Errorf("Service %s not found", label)
+	}
 
+	return
+}
+
+// GetServicePlans -
+func (sm *ServiceManager) GetServicePlans(serviceID string) (servicePlans map[string]interface{}, err error) {
+
+	servicePlans = make(map[string]interface{})
+
+	err = sm.ccGateway.ListPaginatedResources(
+		sm.apiEndpoint,
+		fmt.Sprintf("/v2/services/%s/service_plans", serviceID),
+		resources.ServicePlanResource{},
+		func(resource interface{}) bool {
+			if sp, ok := resource.(resources.ServicePlanResource); ok {
+				servicePlans[sp.Entity.Name] = sp.Metadata.GUID
+			}
+			return true
+		})
+
+	return
+}
+
+// FindServicePlanID -
+func (sm *ServiceManager) FindServicePlanID(serviceID string, plan string) (id string, err error) {
+
+	servicePlans, err := sm.GetServicePlans(serviceID)
+
+	servicePlanID, ok := servicePlans[plan]
+	if !ok {
+		err = fmt.Errorf("plan %s does not exist in service %s", plan, serviceID)
+	} else {
+		id = servicePlanID.(string)
+	}
 	return
 }

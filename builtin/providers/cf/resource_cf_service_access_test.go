@@ -41,7 +41,7 @@ resource "cf_service_access" "mysql-access" {
 
 func TestAccServiceAccess_normal(t *testing.T) {
 
-	deleteMySQLServiceBroker("p-redis")
+	deleteMySQLServiceBroker("p-mysql")
 
 	var servicePlanAccessGUID string
 	ref := "cf_service_access.mysql-access"
