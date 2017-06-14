@@ -2,9 +2,6 @@ package cloudfoundry
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
-	"runtime"
 	"strconv"
 	"testing"
 
@@ -58,13 +55,6 @@ resource "cf_quota" "10g" {
 `
 
 func TestAccQuota_normal(t *testing.T) {
-
-	_, filename, _, _ := runtime.Caller(0)
-	ut := os.Getenv("UNIT_TEST")
-	if !testAccEnvironmentSet() || (len(ut) > 0 && ut != filepath.Base(filename)) {
-		fmt.Printf("Skipping tests in '%s'.\n", filepath.Base(filename))
-		return
-	}
 
 	ref := "cf_quota.50g"
 	quotaname := "50g"
@@ -126,13 +116,6 @@ func TestAccQuota_normal(t *testing.T) {
 }
 
 func TestAccSpaceQuota_normal(t *testing.T) {
-
-	_, filename, _, _ := runtime.Caller(0)
-	ut := os.Getenv("UNIT_TEST")
-	if !testAccEnvironmentSet() || (len(ut) > 0 && ut != filepath.Base(filename)) {
-		fmt.Printf("Skipping tests in '%s'.\n", filepath.Base(filename))
-		return
-	}
 
 	ref := "cf_quota.10g"
 	quotaname := "10g"

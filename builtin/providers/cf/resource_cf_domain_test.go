@@ -36,13 +36,6 @@ resource "cf_domain" "private" {
 
 func TestAccSharedDomain_normal(t *testing.T) {
 
-	_, filename, _, _ := runtime.Caller(0)
-	ut := os.Getenv("UNIT_TEST")
-	if !testAccEnvironmentSet() || (len(ut) > 0 && ut != filepath.Base(filename)) {
-		fmt.Printf("Skipping tests in '%s'.\n", filepath.Base(filename))
-		return
-	}
-
 	ref := "cf_domain.shared"
 	domainname := "dev.pcfdev.io"
 

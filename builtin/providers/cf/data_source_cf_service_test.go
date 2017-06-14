@@ -2,9 +2,6 @@ package cloudfoundry
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
-	"runtime"
 	"testing"
 
 	"code.cloudfoundry.org/cli/cf/models"
@@ -23,13 +20,6 @@ data "cf_service" "redis" {
 
 func TestAccDataSourceService_normal(t *testing.T) {
 
-	_, filename, _, _ := runtime.Caller(0)
-	ut := os.Getenv("UNIT_TEST")
-	if !testAccEnvironmentSet() || (len(ut) > 0 && ut != filepath.Base(filename)) {
-		fmt.Printf("Skipping tests in '%s'.\n", filepath.Base(filename))
-		return
-	}
-
 	ref := "data.cf_service.redis"
 
 	resource.Test(t,
@@ -44,6 +34,8 @@ func TestAccDataSourceService_normal(t *testing.T) {
 						checkDataSourceServiceExists(ref),
 						resource.TestCheckResourceAttr(
 							ref, "name", "p-redis"),
+						resource.TestCheckResourceAttrSet(
+							ref, "service_plans.shared-vm"),
 					),
 				},
 			},
