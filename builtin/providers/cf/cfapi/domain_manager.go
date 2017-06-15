@@ -23,6 +23,8 @@ type DomainManager struct {
 	apiEndpoint string
 
 	repo api.DomainRepository
+
+	routingAPIRepo api.RoutingAPIRepository
 }
 
 // CCDomain -
@@ -32,7 +34,7 @@ type CCDomain struct {
 
 	// Shared domain fields
 	RouterGroupGUID string `json:"router_group_guid,omitempty"`
-	RouterTypeGUID  string `json:"router_group_type,omitempty"`
+	RouterType      string `json:"router_group_type,omitempty"`
 
 	// Private domain fields
 	OwningOrganizationGUID string `json:"owning_organization_guid,omitempty"`
@@ -60,7 +62,8 @@ func newDomainManager(config coreconfig.Reader, ccGateway net.Gateway, logger *L
 
 		apiEndpoint: config.APIEndpoint(),
 
-		repo: api.NewCloudControllerDomainRepository(config, ccGateway),
+		repo:           api.NewCloudControllerDomainRepository(config, ccGateway),
+		routingAPIRepo: api.NewRoutingAPIRepository(config, ccGateway),
 	}
 
 	if len(dm.apiEndpoint) == 0 {
@@ -187,4 +190,22 @@ func (dm *DomainManager) FindSharedByName(name string) (models.DomainFields, err
 // FindPrivateByName -
 func (dm *DomainManager) FindPrivateByName(name string) (models.DomainFields, error) {
 	return dm.repo.FindPrivateByName(name)
+}
+
+// FindRouterGroupByName -
+func (dm *DomainManager) FindRouterGroupByName(name string) (routerGroup models.RouterGroup, err error) {
+
+	err = dm.routingAPIRepo.ListRouterGroups(
+		func(rg models.RouterGroup) bool {
+			if rg.Name == name {
+				routerGroup = rg
+				return false
+			}
+			return true
+		})
+
+	if routerGroup.Name != name {
+		err = fmt.Errorf("Router group with name '%s' was not found.", name)
+	}
+	return
 }

@@ -6,9 +6,11 @@ description: |-
   Get information on a Cloud Foundry Service Plan.
 ---
 
-# cf\_service
+# cf\_service\_plan
 
 Gets information on a Cloud Foundry service plan.
+
+> *You can also reference service plan GUIDs via the `service_plans` attribute of the [`cf_service`](/docs/providers/cf/d/service.html) data resource.*
 
 ## Example Usage
 

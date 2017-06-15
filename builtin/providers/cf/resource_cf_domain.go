@@ -36,10 +36,21 @@ func resourceDomain() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
-			"org": &schema.Schema{
+			"router_group": &schema.Schema{
+				Type:          schema.TypeString,
+				ForceNew:      true,
+				Optional:      true,
+				ConflictsWith: []string{"org"},
+			},
+			"router_type": &schema.Schema{
 				Type:     schema.TypeString,
-				ForceNew: true,
-				Optional: true,
+				Computed: true,
+			},
+			"org": &schema.Schema{
+				Type:          schema.TypeString,
+				ForceNew:      true,
+				Optional:      true,
+				ConflictsWith: []string{"router_group"},
 			},
 			// "shared-with": &schema.Schema{
 			// 	Type:     schema.TypeSet,
@@ -61,7 +72,8 @@ func resourceDomainCreate(d *schema.ResourceData, meta interface{}) error {
 	nameAttr, nameOk := d.GetOk("name")
 	subDomainAttr, subDomainOk := d.GetOk("sub_domain")
 	domainAttr, domainOk := d.GetOk("domain")
-	_, orgOk := d.GetOk("org")
+	org, orgOk := d.GetOk("org")
+	routerGroup, routerGroupOk := d.GetOk("router_group")
 
 	if nameOk {
 
@@ -95,9 +107,15 @@ func resourceDomainCreate(d *schema.ResourceData, meta interface{}) error {
 
 	dm := session.DomainManager()
 	if orgOk {
-		ccDomain, err = dm.CreatePrivateDomain(name, d.Get("org").(string))
+		ccDomain, err = dm.CreatePrivateDomain(name, org.(string))
 	} else {
-		ccDomain, err = dm.CreateSharedDomain(name, nil)
+		if routerGroupOk {
+			rg := routerGroup.(string)
+			ccDomain, err = dm.CreateSharedDomain(name, &rg)
+			d.Set("router_type", ccDomain.RouterType)
+		} else {
+			ccDomain, err = dm.CreateSharedDomain(name, nil)
+		}
 	}
 	if err != nil {
 		return err
@@ -127,6 +145,8 @@ func resourceDomainRead(d *schema.ResourceData, meta interface{}) (err error) {
 		d.Set("name", ccDomain.Name)
 		d.Set("sub_domain", subDomain)
 		d.Set("domain", domain)
+		d.Set("route_group", ccDomain.RouterGroupGUID)
+		d.Set("router_type", ccDomain.RouterType)
 
 		return
 	}
@@ -139,7 +159,7 @@ func resourceDomainRead(d *schema.ResourceData, meta interface{}) (err error) {
 		d.Set("name", ccDomain.Name)
 		d.Set("sub_domain", subDomain)
 		d.Set("domain", domain)
-		d.Set("orf", ccDomain.OwningOrganizationGUID)
+		d.Set("org", ccDomain.OwningOrganizationGUID)
 
 		return
 	}

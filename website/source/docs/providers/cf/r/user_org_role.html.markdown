@@ -17,12 +17,31 @@ The following example associates a user with specific roles in multiple orgs.
 
 ```
 resource "cf_user_org_role" "some-user" {
-    user = "${cf_user.some-user.id}"
+  user = "${cf_user.some-user.id}"
 
-    role {
-      type = "manager"
-      org = "${cf_org.org1.id}"
-    }
+  role {
+    type = "manager"
+    org = "${cf_org.org1.id}"
+  }
+}
+```
+
+Or bulk assign roles as follows.
+
+```
+resource "cf_user_org_role" "bulk_org_role_assignment" {
+
+  users = [ "${cf_user.user1.id}", "${cf_user.user2.id}" ]
+
+  role {
+    type = "manager"
+    orgs = [ "${cf_org.org1.id}", "${cf_org.org4.id}" ]
+  }
+
+  role {
+    type = "member"
+    orgs = [ "${cf_org.org2.id}", "${cf_org.org3.id}", "${cf_org.org5.id}" ]
+  }
 }
 ```
 

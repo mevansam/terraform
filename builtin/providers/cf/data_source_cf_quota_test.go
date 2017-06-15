@@ -51,13 +51,6 @@ data "cf_quota" "qq" {
 
 func TestAccDataSourceQuota_normal(t *testing.T) {
 
-	_, filename, _, _ := runtime.Caller(0)
-	ut := os.Getenv("UNIT_TEST")
-	if !testAccEnvironmentSet() || (len(ut) > 0 && ut != filepath.Base(filename)) {
-		fmt.Printf("Skipping tests in '%s'.\n", filepath.Base(filename))
-		return
-	}
-
 	ref := "data.cf_quota.qq"
 
 	resource.Test(t,

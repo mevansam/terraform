@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/arm/compute"
+	"github.com/Azure/azure-sdk-for-go/storage"
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
@@ -177,8 +178,9 @@ func resourceArmVirtualMachine() *schema.Resource {
 						},
 
 						"create_option": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:             schema.TypeString,
+							Required:         true,
+							DiffSuppressFunc: ignoreCaseDiffSuppressFunc,
 						},
 
 						"disk_size_gb": {
@@ -232,8 +234,9 @@ func resourceArmVirtualMachine() *schema.Resource {
 						},
 
 						"create_option": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:             schema.TypeString,
+							Required:         true,
+							DiffSuppressFunc: ignoreCaseDiffSuppressFunc,
 						},
 
 						"caching": {
@@ -582,7 +585,8 @@ func resourceArmVirtualMachineCreate(d *schema.ResourceData, meta interface{}) e
 		vm.Plan = plan
 	}
 
-	_, vmErr := vmClient.CreateOrUpdate(resGroup, name, vm, make(chan struct{}))
+	_, vmError := vmClient.CreateOrUpdate(resGroup, name, vm, make(chan struct{}))
+	vmErr := <-vmError
 	if vmErr != nil {
 		return vmErr
 	}
@@ -710,7 +714,10 @@ func resourceArmVirtualMachineDelete(d *schema.ResourceData, meta interface{}) e
 	resGroup := id.ResourceGroup
 	name := id.Path["virtualMachines"]
 
-	if _, err = vmClient.Delete(resGroup, name, make(chan struct{})); err != nil {
+	_, error := vmClient.Delete(resGroup, name, make(chan struct{}))
+	err = <-error
+
+	if err != nil {
 		return err
 	}
 
@@ -791,7 +798,10 @@ func resourceArmVirtualMachineDeleteVhd(uri string, meta interface{}) error {
 	}
 
 	log.Printf("[INFO] Deleting VHD blob %s", blobName)
-	_, err = blobClient.DeleteBlobIfExists(containerName, blobName, nil)
+	container := blobClient.GetContainerReference(containerName)
+	blob := container.GetBlobReference(blobName)
+	options := &storage.DeleteBlobOptions{}
+	err = blob.Delete(options)
 	if err != nil {
 		return fmt.Errorf("Error deleting VHD blob: %s", err)
 	}
@@ -809,7 +819,8 @@ func resourceArmVirtualMachineDeleteManagedDisk(managedDiskID string, meta inter
 	resGroup := id.ResourceGroup
 	name := id.Path["disks"]
 
-	_, err = diskClient.Delete(resGroup, name, make(chan struct{}))
+	_, error := diskClient.Delete(resGroup, name, make(chan struct{}))
+	err = <-error
 	if err != nil {
 		return fmt.Errorf("Error deleting Managed Disk (%s %s) %s", name, resGroup, err)
 	}
@@ -1033,7 +1044,7 @@ func flattenAzureRmVirtualMachineOsProfileLinuxConfiguration(config *compute.Lin
 	result["disable_password_authentication"] = *config.DisablePasswordAuthentication
 
 	if config.SSH != nil && len(*config.SSH.PublicKeys) > 0 {
-		ssh_keys := make([]map[string]interface{}, len(*config.SSH.PublicKeys))
+		ssh_keys := make([]map[string]interface{}, 0, len(*config.SSH.PublicKeys))
 		for _, i := range *config.SSH.PublicKeys {
 			key := make(map[string]interface{})
 			key["path"] = *i.Path

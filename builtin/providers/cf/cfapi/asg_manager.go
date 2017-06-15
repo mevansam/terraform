@@ -34,9 +34,10 @@ type CCASGRule struct {
 	Protocol    string `json:"protocol"`
 	Destination string `json:"destination"`
 	Ports       string `json:"ports,omitempty"`
-	Log         bool   `json:"log,omitempty"`
 	Code        int    `json:"code,omitempty"`
 	Type        int    `json:"type,omitempty"`
+	Log         bool   `json:"log,omitempty"`
+	Description string `json:"description,omitempty"`
 }
 
 // CCASG -

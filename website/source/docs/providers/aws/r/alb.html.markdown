@@ -16,7 +16,7 @@ thing.
 
 ## Example Usage
 
-```
+```hcl
 # Create a new load balancer
 resource "aws_alb" "test" {
   name            = "test-alb-tf"
@@ -73,6 +73,15 @@ The following attributes are exported in addition to the arguments listed above:
 * `dns_name` - The DNS name of the load balancer.
 * `canonical_hosted_zone_id` - The canonical hosted zone ID of the load balancer.
 * `zone_id` - The canonical hosted zone ID of the load balancer (to be used in a Route 53 Alias record).
+
+## Timeouts
+
+`aws_alb` provides the following
+[Timeouts](/docs/configuration/resources.html#timeouts) configuration options:
+
+- `create` - (Default `10 minutes`) Used for Creating ALB
+- `update` - (Default `10 minutes`) Used for ALB modifications
+- `delete` - (Default `10 minutes`) Used for destroying ALB
 
 ## Import
 

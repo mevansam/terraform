@@ -15,11 +15,11 @@ Provides a Cloud Foundry resource for managing [service brokers](https://docs.cl
 The following example creates an service_broker.
 
 ```
-resource "cf_service_broker" "sb1" {
-    name = "my-service-broke"
-    url = "https://mysb.cfapps.io"
-    username = "mysb_user"
-    password = "password"
+resource "cf_service_broker" "mysql" {
+	name = "test-mysql"
+	url = "http://mysql-broker.local.pcfdev.io"
+	username = "admin"
+	password = "admin"
 }
 ```
 
@@ -38,4 +38,4 @@ The following arguments are supported:
 The following attributes are exported:
 
 * `id` - The GUID of the service broker
-* `services_plans` - Map of service plan GUIDs keyed by service "&lt;service name&gt;/&lt;plan name&gt;"
+* `service_plans` - Map of service plan GUIDs keyed by service "&lt;service name&gt;/&lt;plan name&gt;"

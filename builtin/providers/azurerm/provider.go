@@ -78,6 +78,8 @@ func Provider() terraform.ResourceProvider {
 			"azurerm_eventhub_consumer_group":     resourceArmEventHubConsumerGroup(),
 			"azurerm_eventhub_namespace":          resourceArmEventHubNamespace(),
 
+			"azurerm_express_route_circuit": resourceArmExpressRouteCircuit(),
+
 			"azurerm_lb":                      resourceArmLoadBalancer(),
 			"azurerm_lb_backend_address_pool": resourceArmLoadBalancerBackendAddressPool(),
 			"azurerm_lb_nat_rule":             resourceArmLoadBalancerNatRule(),
@@ -99,6 +101,7 @@ func Provider() terraform.ResourceProvider {
 			"azurerm_servicebus_namespace":      resourceArmServiceBusNamespace(),
 			"azurerm_servicebus_subscription":   resourceArmServiceBusSubscription(),
 			"azurerm_servicebus_topic":          resourceArmServiceBusTopic(),
+			"azurerm_sql_elasticpool":           resourceArmSqlElasticPool(),
 			"azurerm_storage_account":           resourceArmStorageAccount(),
 			"azurerm_storage_blob":              resourceArmStorageBlob(),
 			"azurerm_storage_container":         resourceArmStorageContainer(),
@@ -346,7 +349,7 @@ func userDataStateFunc(v interface{}) string {
 	}
 }
 
-// Base64Encode encodes data if the input isn't already encoded using
+// base64Encode encodes data if the input isn't already encoded using
 // base64.StdEncoding.EncodeToString. If the input is already base64 encoded,
 // return the original input unchanged.
 func base64Encode(data string) string {
