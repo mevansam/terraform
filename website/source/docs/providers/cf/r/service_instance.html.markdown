@@ -15,10 +15,14 @@ Provides a Cloud Foundry resource for managing Cloud Foundry [Service Instances]
 The following is a Service Instance created within the referenced space and service plan. 
 
 ```
+data "cf_service" "redis" {
+    name = "p-redis"
+}
+
 resource "cf_service_instance" "redis1" {
-	name = "pricing-grid"
+  name = "pricing-grid"
   space = "${cf_space.dev.id}"
-  servicePlan = "${data.cf_service_plan.redis.id}"
+  servicePlan = "${data.cf_service.service_plans.redis.shared-vm}"
 }
 ```
 
