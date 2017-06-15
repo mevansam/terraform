@@ -35,8 +35,12 @@ description: |-
           <h2 class="os-name"><%= pretty_os(os) %></h2>
           <ul>
             <% arches.each do |arch, url| %>
-              <% if [ "amd64" ].include?(arch) %>
-              <li><a href="<%= "/pkg/#{os}_#{arch}/terraform" %>"><%= pretty_arch(arch) %></a></li>
+              <% if arch == "amd64" %>
+                <% if os == "windows" %>
+                <li><a href="<%= "/pkg/#{os}_#{arch}/terraform.exe" %>"><%= pretty_arch(arch) %></a></li>
+                <% else %>
+                <li><a href="<%= "/pkg/#{os}_#{arch}/terraform" %>"><%= pretty_arch(arch) %></a></li>
+                <% end %>
               <% end %>
             <% end %>
           </ul>
