@@ -76,7 +76,9 @@ func Provider() terraform.ResourceProvider {
 			"cf_service_access":        resourceServiceAccess(),
 			"cf_service_instance":      resourceServiceInstance(),
 			"cf_user_provided_service": resourceUserProvidedService(),
+			"cf_buildpack":             resourceBuildpack(),
 			"cf_app":                   resourceApp(),
+			"cf_route":                 resourceRoute(),
 		},
 
 		ConfigureFunc: providerConfigure,
@@ -84,6 +86,10 @@ func Provider() terraform.ResourceProvider {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
+
+	if err := initRepoManager(); err != nil {
+		return nil, err
+	}
 
 	config := Config{
 		endpoint:          d.Get("api_url").(string),

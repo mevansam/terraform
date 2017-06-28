@@ -22,6 +22,11 @@ var testSession *cfapi.Session
 var pcfDevOrgID string
 
 func init() {
+
+	if err := initRepoManager(); err != nil {
+		panic(err)
+	}
+
 	testAccProvider = Provider().(*schema.Provider)
 	testAccProviders = map[string]terraform.ResourceProvider{
 		"cf": testAccProvider,
@@ -143,9 +148,17 @@ func assertSame(actual interface{}, expected interface{}) error {
 
 func assertEquals(attributes map[string]string,
 	key string, expected interface{}) error {
-	v := attributes[key]
-	if v != expected {
-		return fmt.Errorf("expected resource '%s' to be '%s' but it was '%s'", key, v, expected)
+	v, ok := attributes[key]
+
+	if ok {
+		if expected == nil {
+			return fmt.Errorf("expected resource '%s' to not be present but it was '%s'", key, v)
+		}
+		if v != expected {
+			return fmt.Errorf("expected resource '%s' to be '%s' but it was '%s'", key, expected, v)
+		}
+	} else if expected != nil {
+		return fmt.Errorf("expected resource '%s' to be '%s' but it was present", key, expected)
 	}
 	return nil
 }
