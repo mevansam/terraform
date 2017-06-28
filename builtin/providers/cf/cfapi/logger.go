@@ -30,7 +30,7 @@ func NewLogger(debug bool, tracePath string) *Logger {
 	} else if len(tracePath) > 0 {
 		l.TracePrinter = trace.NewLogger(os.Stdout, true, tracePath, "")
 	} else {
-		l.TracePrinter = trace.NewLogger(os.Stdout, false, "", "")
+		l.TracePrinter = trace.NewLogger(os.Stdout, debug, "", "")
 	}
 
 	l.UI = terminal.NewUI(os.Stdin, os.Stdout, terminal.NewTeePrinter(os.Stdout), l.TracePrinter)
