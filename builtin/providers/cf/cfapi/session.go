@@ -28,16 +28,19 @@ type Session struct {
 	ccGateway  net.Gateway
 	uaaGateway net.Gateway
 
-	authManager    *AuthManager
-	stackManager   *StackManager
-	userManager    *UserManager
-	domainManager  *DomainManager
-	asgManager     *ASGManager
-	evgManager     *EVGManager
-	quotaManager   *QuotaManager
-	orgManager     *OrgManager
-	spaceManager   *SpaceManager
-	serviceManager *ServiceManager
+	authManager      *AuthManager
+	stackManager     *StackManager
+	userManager      *UserManager
+	domainManager    *DomainManager
+	asgManager       *ASGManager
+	evgManager       *EVGManager
+	quotaManager     *QuotaManager
+	orgManager       *OrgManager
+	spaceManager     *SpaceManager
+	serviceManager   *ServiceManager
+	buildpackManager *BuildpackManager
+	appManager       *AppManager
+	routeManager     *RouteManager
 
 	// Used for direct endpoint calls
 	httpClient *http.Client
@@ -194,6 +197,18 @@ func (s *Session) initCliConnection(
 	if err != nil {
 		return err
 	}
+	s.buildpackManager, err = newBuildpackManager(s.config, s.ccGateway, s.Log)
+	if err != nil {
+		return err
+	}
+	s.appManager, err = newAppManager(s.config, s.ccGateway, s.Log)
+	if err != nil {
+		return err
+	}
+	s.routeManager, err = newRouteManager(s.config, s.ccGateway, s.Log)
+	if err != nil {
+		return err
+	}
 	return
 }
 
@@ -245,6 +260,21 @@ func (s *Session) SpaceManager() *SpaceManager {
 // ServiceManager -
 func (s *Session) ServiceManager() *ServiceManager {
 	return s.serviceManager
+}
+
+// BuildpackManager -
+func (s *Session) BuildpackManager() *BuildpackManager {
+	return s.buildpackManager
+}
+
+// AppManager -
+func (s *Session) AppManager() *AppManager {
+	return s.appManager
+}
+
+// RouteManager -
+func (s *Session) RouteManager() *RouteManager {
+	return s.routeManager
 }
 
 // noopPersistor - No Op Persistor for CF CLI session
