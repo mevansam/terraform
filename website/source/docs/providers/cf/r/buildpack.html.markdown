@@ -36,13 +36,25 @@ The following arguments are supported:
 
 One of the following arguments must be declared to locate buildpack source or archive to be uploaded.
 
-* `url` - (Optional) Specifies the location of the buildpack to upload from. It can be a URL to a zip file, a github repository or a local directory via "`file://...`".
-* `git` - (Optional) The git location to pull the builpack source directly from source control.
-  - `url` - (Required) The git URL for the application repository.
-  - `branch` - (Optional) The branch or tag of the repository.
-  - `key` - (Optional) The git private key to access a private repo via SSH.
-  - `user` - (Optional) Git user for accessing a private repo.
-  - `password` - (Optional) Git password for accessing a private repo.
+* `url` - (Optional, String) Specifies the location of the buildpack to upload from. It can be a URL to a zip file, a github repository or a local directory via "`file://...`".
+
+* `git` - (Optional, String) The git location to pull the builpack source directly from source control.
+
+  - `url` - (Required, String) The git URL for the application repository.
+  - `branch` - (Optional, String) The branch of from which the repository contents should be retrieved.
+  - `tag` - (Optional, String) The version tag of the contents to retrieve.
+  - `user` - (Optional, String) Git user for accessing a private repo.
+  - `password` - (Optional, String) Git password for accessing a private repo.
+  - `key` - (Optional, String) The git private key to access a private repo via SSH.
+  
+      > Arguments "`tag`" and "`branch`" are mutually exclusive. If a git SSH "`key`" is provided and it is protected the "`password`" argument should be used as the key's password.
+
+* `github_release` - (Optional, String) The Buildpack archive published as a github release.
+  - `owner` - (Required, String) The github owner or organization name.
+  - `repo` - (Required, String) The repository containing the release.
+  - `token` - (Optional, String) Github API token to use to access Github.
+  - `version` - (Optional, String) The version or tag of the release.
+  - `filename` - (Required, String) The name of the published file. The values `zipball` or `tarball` will download the published  source archive.
 
 ## Attributes Reference
 

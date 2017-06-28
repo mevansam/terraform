@@ -26,6 +26,7 @@ resource "cf_app" "spring-music" {
 The following arguments are supported:
 
 * `name` - (Required) The name of the application in Cloud Foundry space.
+* `hostname` - (Optional) The hostname which will be used to create a default route to the app on the default application domain. If this argument is not provided a route can be created and mapped to this application using the [`cf_route`](/docs/providers/cf/r/route.html). 
 * `space` - (Required) The GUID of the associated space.
 * `instances` - (Optional, Number) The number of app instances that you want to start.
 * `memory` - (Optional, String) The memory limit for all instances of an app. This attribute requires a unit of measurement: M, MB, G, or GB, in upper case or lower case.
@@ -41,31 +42,44 @@ The following arguments are supported:
 
 One of the following arguments must be declared to locate application source or archive to be pushed.
 
-* `url` - (Optional) The URL for the application binary. A local path may be referenced via "`file://...`".
-* `git` - (Optional) The git location to pull the application source directly from source control.
-  - `url` - (Required) The git URL for the application repository.
-  - `branch` - (Optional) The branch or tag of the repository.
-  - `key` - (Optional) The git private key to access a private repo via SSH.
-  - `user` - (Optional) Git user for accessing a private repo.
-  - `password` - (Optional) Git password for accessing a private repo.
+* `url` - (Optional, String) The URL for the application binary. A local path may be referenced via "`file://...`".
 
+* `git` - (Optional, String) The git location to pull the application source directly from source control.
+
+  - `url` - (Required, String) The git URL for the application repository.
+  - `branch` - (Optional, String) The branch or tag of the repository.
+  - `key` - (Optional, String) The git private key to access a private repo via SSH.
+  - `user` - (Optional, String) Git user for accessing a private repo.
+  - `password` - (Optional, String) Git password for accessing a private repo.
+
+* `github_release` - (Optional, String) The Buildpack archive published as a github release.
+
+  - `owner` - (Required, String) The github owner or organization name
+  - `repo` - (Required, String) The repository containing the release
+  - `token` - (Optional, String) Github API token to use to access Github
+  - `version` - (Optional, String) The version or tag of the release.
+  - `filename` - (Required, String) The name of the published file. The values `zipball` or `tarball` will download the published    
+  
 ### Service bindings
+
+Modifying this argument will cause the application to be restaged.
 
 * `service_binding` - (Optional, Array) Service instances to bind to.
 
   - `service` - (Required, String) The service instance GUID.
   - `params` - (Optional, Map) A list of key/value parameters used by the service broker to create the binding.
 
-### Application Routes
+### Blue-Green Deployment Strategy
 
-* `route` - (Optional, Array) Application routes to associate with the application. For applications that serve requests via HTTP or TCP at least one route needs to be declared in order for the application to be externally accessible.
+* `blue_green` - (Optional) Defines a blue-green app deployment strategy. When doing a blue-green deployment the actual name of the application will be timestamped to differentiate between the current live application and the more recent staged application.
 
-  - `hostname` - (Optional, String) The application's host name.
-  - `domains` - (Optional, Array of strings) Array of one of more domain GUIDs the application routes will be created on.
-  - `port` - (Optional) The port to associate with the route for a TCP route. 
-  - `path` - (Optional) A path for a HTTP route.
+  - `stage_route` - (Required, String) The GUID of the route where the staged application will be available.
+  - `live_route` - (Required, String) The GUID of the route where the live application will be available.
+  - `validation_script` - (Optional, String) The validation script to execute against the stage application before mapping the live route to the staged application.
 
 ### Environment Variables
+
+Modifying this argument will cause the application to be restaged.
 
 * `environment` - (Optional, Map) Key/value pairs of all the environment variables to run in your app. Does not include any system or service variables.
 
@@ -73,7 +87,6 @@ One of the following arguments must be declared to locate application source or 
 
 * `health-check-http-endpoint` -(Optional, String) The endpoint for the http health check type. The default is '/'.
 * `health-check-type` - (Optional, String) The health check type which can be on of "`port`", "`process`", "`http`" or "`none`".
-
 
 ## Attributes Reference
 
