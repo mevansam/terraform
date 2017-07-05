@@ -13,27 +13,12 @@ import (
 
 const serviceInstanceResourceCreate = `
 
-resource "cf_org" "org1" {
-	name = "organization-one"
+data "cf_org" "org" {
+    name = "pcfdev-org"
 }
-resource "cf_quota" "dev" {
-	name = "50g"
-	org = "${cf_org.org1.id}"
-    allow_paid_service_plans = true
-    instance_memory = 1024
-    total_memory = 51200
-    total_app_instances = 100
-    total_routes = 100
-    total_services = 150
-
-}
-
-resource "cf_space" "space1" {
-	name = "space-one"
-	org = "${cf_org.org1.id}"
-	quota = "${cf_quota.dev.id}"
-	
-	allow_ssh = true
+data "cf_space" "space" {
+    name = "pcfdev-space"
+	org = "${data.cf_org.org.id}"
 }
 
 data "cf_service" "redis" {
@@ -46,35 +31,19 @@ data "cf_service_plan" "redis" {
 
 resource "cf_service_instance" "redis1" {
 	name = "redis1"
-    space = "${cf_space.space1.id}"
+    space = "${cf_space.space.id}"
     servicePlan = "${data.cf_service_plan.redis.id}"
-	
 }
 `
 
 const serviceInstanceResourceUpdate = `
 
-resource "cf_org" "org1" {
-	name = "organization-one"
+data "cf_org" "org" {
+    name = "pcfdev-org"
 }
-resource "cf_quota" "dev" {
-	name = "50g"
-	org = "${cf_org.org1.id}"
-    allow_paid_service_plans = true
-    instance_memory = 1024
-    total_memory = 51200
-    total_app_instances = 100
-    total_routes = 100
-    total_services = 150
-
-}
-
-resource "cf_space" "space1" {
-	name = "space-one"
-	org = "${cf_org.org1.id}"
-	quota = "${cf_quota.dev.id}"
-	
-	allow_ssh = true
+data "cf_space" "space" {
+    name = "pcfdev-space"
+	org = "${data.cf_org.org.id}"
 }
 
 data "cf_service" "redis" {
@@ -87,7 +56,7 @@ data "cf_service_plan" "redis" {
 
 resource "cf_service_instance" "redis1" {
 	name = "redis-new-name"
-    space = "${cf_space.space1.id}"
+    space = "${cf_space.space.id}"
     servicePlan = "${data.cf_service_plan.redis.id}"
 	tags = [ "redis" , "data-grid" ]
 }

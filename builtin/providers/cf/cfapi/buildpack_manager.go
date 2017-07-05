@@ -67,7 +67,7 @@ func (bp *CCBuildpack) fromModel(buildpack models.Buildpack) {
 // newBuildpackManager -
 func newBuildpackManager(config coreconfig.Reader, ccGateway net.Gateway, logger *Logger) (sm *BuildpackManager, err error) {
 
-	zipper := &appfiles.ApplicationZipper{}
+	zipper := appfiles.ApplicationZipper{}
 
 	sm = &BuildpackManager{
 		log: logger,

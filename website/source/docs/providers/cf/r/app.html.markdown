@@ -26,17 +26,18 @@ resource "cf_app" "spring-music" {
 The following arguments are supported:
 
 * `name` - (Required) The name of the application in Cloud Foundry space.
-* `hostname` - (Optional) The hostname which will be used to create a default route to the app on the default application domain. If this argument is not provided a route can be created and mapped to this application using the [`cf_route`](/docs/providers/cf/r/route.html). 
 * `space` - (Required) The GUID of the associated space.
+* `ports` - (Optional, Array of Number) A list of ports which the app will listen on.
 * `instances` - (Optional, Number) The number of app instances that you want to start.
-* `memory` - (Optional, String) The memory limit for all instances of an app. This attribute requires a unit of measurement: M, MB, G, or GB, in upper case or lower case.
-* `disk_quota` - (Optional, String) The disk space for the app instance. This attribute requires a unit of measurement: M, MB, G, or GB, in upper case or lower case.
+* `memory` - (Optional, Number) The memory limit for each application instance in megabytes.
+* `disk_quota` - (Optional, Number) The disk space to be allocated for each application instance in megabytes.
 * `stack` - (Optional) The GUID of the stack the application will be deployed to. Use the [`cf_stack`](/docs/providers/cf/d/stack.html) data resource to lookup the stack GUID to overriding the default.
-* `state` - (Optional, String) The desired state of the app. One of "`STOPPED`" or "`STARTED`".
+* `buildpack` - (Optional, String) The custom buildpack to use. This will bypass the buildpack detect phase. There are three options to choose from:
+a) Blank means autodetection; b) A Git Url pointing to a buildpack; c) Name of an installed admin buildpack.
 * `command` - (Optional, String) A custom start command for the application. This overrides the start command provided by the buildpack.
-* `buildpack` - (Optional, String) The custom buildpack to use. This will bypass the buildpack detect phase.
 * `enable_ssh` - (Optional, Boolean) Whether to enable or disable SSH access to the container. Default is `true` unless disabled globally.
 * `timeout` - (Optional, Number) Defines the number of seconds that Cloud Foundry waits for starting your application.
+* `stopped` - (Optional, Boolean) The application will be created and remain in an stopped state. Default is to stage and start the application.
 
 ### Application Source / Binary
 
@@ -47,10 +48,13 @@ One of the following arguments must be declared to locate application source or 
 * `git` - (Optional, String) The git location to pull the application source directly from source control.
 
   - `url` - (Required, String) The git URL for the application repository.
-  - `branch` - (Optional, String) The branch or tag of the repository.
+  - `branch` - (Optional, String) The branch of from which the repository contents should be retrieved.
+  - `tag` - (Optional, String) The version tag of the contents to retrieve.
   - `key` - (Optional, String) The git private key to access a private repo via SSH.
   - `user` - (Optional, String) Git user for accessing a private repo.
   - `password` - (Optional, String) Git password for accessing a private repo.
+
+      > Arguments "`tag`" and "`branch`" are mutually exclusive. If a git SSH "`key`" is provided and it is protected the "`password`" argument should be used as the key's password.
 
 * `github_release` - (Optional, String) The Buildpack archive published as a github release.
 
@@ -58,7 +62,7 @@ One of the following arguments must be declared to locate application source or 
   - `repo` - (Required, String) The repository containing the release
   - `token` - (Optional, String) Github API token to use to access Github
   - `version` - (Optional, String) The version or tag of the release.
-  - `filename` - (Required, String) The name of the published file. The values `zipball` or `tarball` will download the published    
+  - `filename` - (Required, String) The name of the published file. The values `zipball` or `tarball` will download the published
   
 ### Service bindings
 
@@ -69,12 +73,13 @@ Modifying this argument will cause the application to be restaged.
   - `service` - (Required, String) The service instance GUID.
   - `params` - (Optional, Map) A list of key/value parameters used by the service broker to create the binding.
 
-### Blue-Green Deployment Strategy
+### Routing and Blue-Green Deployment Strategy
 
-* `blue_green` - (Optional) Defines a blue-green app deployment strategy. When doing a blue-green deployment the actual name of the application will be timestamped to differentiate between the current live application and the more recent staged application.
+* `route` - (Optional) Configures how the application or service will be accessed. This can be also used to define a blue-green app deployment strategy. When doing a blue-green deployment the actual name of the application will be timestamped to differentiate between the current live application and the more recent staged application.
 
-  - `stage_route` - (Required, String) The GUID of the route where the staged application will be available.
-  - `live_route` - (Required, String) The GUID of the route where the live application will be available.
+  - `default_route` - (Optional, String) The GUID of the default route where the application will be available once deployed.
+  - `stage_route` - (Optional, String) The GUID of the route where the staged application will be available.
+  - `live_route` - (Optional, String) The GUID of the route where the live application will be available.
   - `validation_script` - (Optional, String) The validation script to execute against the stage application before mapping the live route to the staged application.
 
 ### Environment Variables
@@ -85,8 +90,9 @@ Modifying this argument will cause the application to be restaged.
 
 ### Health Checks
 
-* `health-check-http-endpoint` -(Optional, String) The endpoint for the http health check type. The default is '/'.
-* `health-check-type` - (Optional, String) The health check type which can be on of "`port`", "`process`", "`http`" or "`none`".
+* `health_check_http_endpoint` -(Optional, String) The endpoint for the http health check type. The default is '/'.
+* `health_check_type` - (Optional, String) The health check type which can be one of "`port`", "`process`", "`http`" or "`none`". Default is "`http`".
+* `health_check_timeout` - (Optional, Number) The timeout in seconds for the health check.
 
 ## Attributes Reference
 

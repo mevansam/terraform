@@ -1,7 +1,10 @@
 package cloudfoundry
 
 import (
+	"bytes"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"reflect"
 	"strconv"
@@ -17,9 +20,10 @@ import (
 var testAccProviders map[string]terraform.ResourceProvider
 var testAccProvider *schema.Provider
 
-var testSession *cfapi.Session
+var tstSession *cfapi.Session
 
 var pcfDevOrgID string
+var pcfDevSpaceID string
 
 func init() {
 
@@ -73,13 +77,13 @@ func testAccEnvironmentSet() bool {
 	return true
 }
 
-func tesSession() *cfapi.Session {
+func testSession() *cfapi.Session {
 
 	if !testAccEnvironmentSet() {
 		panic(fmt.Errorf("ERROR! test CF_* environment variables have not been set"))
 	}
 
-	if testSession == nil {
+	if tstSession == nil {
 		c := Config{
 			endpoint:        os.Getenv("CF_API_URL"),
 			User:            os.Getenv("CF_USER"),
@@ -98,9 +102,9 @@ func tesSession() *cfapi.Session {
 			fmt.Printf("ERROR! Error creating a new session: %s\n", err.Error())
 			panic(err.Error())
 		}
-		testSession = session
+		tstSession = session
 	}
-	return testSession
+	return tstSession
 }
 
 func defaultPcfDevOrgID() string {
@@ -112,7 +116,7 @@ func defaultPcfDevOrgID() string {
 			pcfDevOrg cfapi.CCOrg
 		)
 
-		if pcfDevOrg, err = tesSession().OrgManager().FindOrg("pcfdev-org"); err != nil {
+		if pcfDevOrg, err = testSession().OrgManager().FindOrg("pcfdev-org"); err != nil {
 			panic(err.Error())
 		}
 		pcfDevOrgID = pcfDevOrg.ID
@@ -120,9 +124,26 @@ func defaultPcfDevOrgID() string {
 	return pcfDevOrgID
 }
 
+func defaultPcfDevSpaceID() string {
+
+	if len(pcfDevSpaceID) == 0 {
+
+		var (
+			err         error
+			pcfDevSpace cfapi.CCSpace
+		)
+
+		if pcfDevSpace, err = testSession().SpaceManager().FindSpaceInOrg("pcfdev-space", defaultPcfDevOrgID()); err != nil {
+			panic(err.Error())
+		}
+		pcfDevSpaceID = pcfDevSpace.ID
+	}
+	return pcfDevSpaceID
+}
+
 func deleteMySQLServiceBroker(name string) {
 
-	session := tesSession()
+	session := testSession()
 	sm := session.ServiceManager()
 	serviceBrokerID, err := sm.GetServiceBrokerID(name)
 	if err == nil {
@@ -150,15 +171,45 @@ func assertEquals(attributes map[string]string,
 	key string, expected interface{}) error {
 	v, ok := attributes[key]
 
+	expectedValue := reflect.ValueOf(expected)
+
 	if ok {
-		if expected == nil {
-			return fmt.Errorf("expected resource '%s' to not be present but it was '%s'", key, v)
+
+		var s string
+		if expectedValue.Kind() == reflect.Ptr {
+
+			if expectedValue.IsNil() {
+				return fmt.Errorf("expected resource '%s' to not be present but it was '%s'", key, v)
+			}
+
+			expectedValueContent := reflect.Indirect(reflect.ValueOf(expected))
+			switch expectedValueContent.Kind() {
+			case reflect.String:
+				s = fmt.Sprintf("%s", expectedValueContent.String())
+			case reflect.Int:
+				s = fmt.Sprintf("%d", expectedValueContent.Int())
+			case reflect.Bool:
+				s = fmt.Sprintf("%t", expectedValueContent.Bool())
+			default:
+				return fmt.Errorf("unable to determine underlying content of expected value: %s", expectedValueContent.Kind())
+			}
+		} else {
+			switch expected.(type) {
+			case string:
+				s = fmt.Sprintf("%s", expected)
+			case int:
+				s = fmt.Sprintf("%d", expected)
+			case bool:
+				s = fmt.Sprintf("%t", expected)
+			default:
+				s = fmt.Sprintf("%v", expected)
+			}
 		}
-		if v != expected {
+		if v != s {
 			return fmt.Errorf("expected resource '%s' to be '%s' but it was '%s'", key, expected, v)
 		}
-	} else if expected != nil {
-		return fmt.Errorf("expected resource '%s' to be '%s' but it was present", key, expected)
+	} else if expectedValue.Kind() == reflect.Ptr && !expectedValue.IsNil() {
+		return fmt.Errorf("expected resource '%s' to be '%s' but it was not present", key, reflect.Indirect(reflect.ValueOf(expected)))
 	}
 	return nil
 }
@@ -270,7 +321,7 @@ func assertSetEquals(attributes map[string]string,
 	return
 }
 
-func asserMapEquals(key string, attributes map[string]string, actual map[string]interface{}) (err error) {
+func assertMapEquals(key string, attributes map[string]string, actual map[string]interface{}) (err error) {
 
 	expected := make(map[string]interface{})
 	for k, v := range attributes {
@@ -292,4 +343,40 @@ func asserMapEquals(key string, attributes map[string]string, actual map[string]
 		err = fmt.Errorf("map with key '%s' expected to be %#v but was %#v", key, expected, actual)
 	}
 	return nil
+}
+
+func assertHTTPResponse(url string, expectedStatusCode int, expectedResponses *[]string) (err error) {
+
+	var resp *http.Response
+	if resp, err = http.Get(url); err != nil {
+		return
+	}
+	if expectedStatusCode != resp.StatusCode {
+		err = fmt.Errorf(
+			"expected response status code from url '%s' to be '%d', but actual was: %s",
+			url, expectedStatusCode, resp.Status)
+		return
+	}
+	if expectedResponses != nil {
+		in := resp.Body
+		out := bytes.NewBuffer(nil)
+		if _, err = io.Copy(out, in); err != nil {
+			return
+		}
+		content := out.String()
+
+		found := false
+		for _, e := range *expectedResponses {
+			if e == content {
+				found = true
+				break
+			}
+		}
+		if !found {
+			err = fmt.Errorf(
+				"expected response from url '%s' to be one of '%v', but actual was '%s'",
+				url, *expectedResponses, content)
+		}
+	}
+	return
 }

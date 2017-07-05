@@ -13,33 +13,10 @@ const spaceDataResource = `
 
 resource "cf_org" "org1" {
 	name = "organization-one"
-	quota = "${cf_quota.dev.id}"
 }
-resource "cf_quota" "dev" {
-	name = "50g"
-    allow_paid_service_plans = true
-    instance_memory = 1024
-    total_memory = 51200
-    total_app_instances = 100
-    total_routes = 100
-	total_services = 150
-	total_route_ports = 5
-}
-resource "cf_quota" "dev-space" {
-	name = "50g"
-    allow_paid_service_plans = true
-    instance_memory = 1024
-    total_memory = 51200
-    total_app_instances = 100
-    total_routes = 100
-	total_services = 150
-	org = "${cf_org.org1.id}"
-}	
-
 resource "cf_space" "space1" {
 	name = "space-one"
 	org = "${cf_org.org1.id}"
-	quota = "${cf_quota.dev-space.id}"
 }
 
 data "cf_space" "myspace" {

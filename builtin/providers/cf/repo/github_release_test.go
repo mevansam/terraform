@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform/builtin/providers/cf/repo"
@@ -26,10 +27,10 @@ func testReleaseFileDownload(workspace string, t *testing.T) {
 	fmt.Println("Test: release file download")
 
 	repoManager := repo.NewRepoManager(workspace)
-	ghRelease, err := repoManager.GetGithubRelease("mevansam", "test_repo", "test_release_file.zip", nil)
+	ghRelease, err := repoManager.GetGithubRelease("mevansam", "test-app", "test_release_file.zip", nil)
 	checkError(t, err)
 
-	err = ghRelease.SetVersion("0.0.1", repo.DefaultVersionType)
+	err = ghRelease.SetVersion("v0.0.1", repo.DefaultVersionType)
 	checkError(t, err)
 
 	content := readArchiveZip(ghRelease.GetPath(), t)
@@ -37,7 +38,7 @@ func testReleaseFileDownload(workspace string, t *testing.T) {
 		t.Fatalf("unexpected archive contents: %s\n", content)
 	}
 
-	err = ghRelease.SetVersion("0.0.2", repo.DefaultVersionType)
+	err = ghRelease.SetVersion("v0.0.2", repo.DefaultVersionType)
 	checkError(t, err)
 
 	content = readArchiveZip(ghRelease.GetPath(), t)
@@ -50,10 +51,10 @@ func testSourceZipFileDownload(workspace string, t *testing.T) {
 	fmt.Println("Test: source zip file download")
 
 	repoManager := repo.NewRepoManager(workspace)
-	ghRelease, err := repoManager.GetGithubRelease("mevansam", "test_repo", "zipball", nil)
+	ghRelease, err := repoManager.GetGithubRelease("mevansam", "test-app", "zipball", nil)
 	checkError(t, err)
 
-	err = ghRelease.SetVersion("0.0.1", repo.DefaultVersionType)
+	err = ghRelease.SetVersion("v0.0.1", repo.DefaultVersionType)
 	checkError(t, err)
 
 	validateSourceZip(ghRelease.GetPath(), t)
@@ -63,10 +64,10 @@ func testSourceTarFileDownload(workspace string, t *testing.T) {
 	fmt.Println("Test: source tar file download")
 
 	repoManager := repo.NewRepoManager(workspace)
-	ghRelease, err := repoManager.GetGithubRelease("mevansam", "test_repo", "tarball", nil)
+	ghRelease, err := repoManager.GetGithubRelease("mevansam", "test-app", "tarball", nil)
 	checkError(t, err)
 
-	err = ghRelease.SetVersion("0.0.1", repo.DefaultVersionType)
+	err = ghRelease.SetVersion("v0.0.1", repo.DefaultVersionType)
 	checkError(t, err)
 
 	validateSourceZip(ghRelease.GetPath(), t)
@@ -103,8 +104,7 @@ func validateSourceZip(path string, t *testing.T) {
 	checkError(t, err)
 
 	for _, f := range r.File {
-		switch f.Name {
-		case "README.md":
+		if f.Name == "README.md" {
 			rc, err := f.Open()
 			defer rc.Close()
 			checkError(t, err)
@@ -113,16 +113,16 @@ func validateSourceZip(path string, t *testing.T) {
 			_, err = io.Copy(buf, rc)
 			checkError(t, err)
 
-			content := buf.String()
-			if content != "# test_repo\nRepo for testing git client apps\n" {
-				t.Fatalf("unexpected content in source file 'README.md': %s\n", content)
+			matched, err := regexp.Match("# Test App - a simple Go webapp\n", buf.Bytes())
+			checkError(t, err)
+			if matched {
+				return
 			}
-
-		case "LICENSE":
-		default:
-			t.Fatalf("unexpected source archive content: %s\n", f.Name)
+			t.Fatalf("'%s/README.md' content is not consistent with what was expected", path)
 		}
 	}
+
+	t.Fatalf("'README.md' was not found in source archive")
 }
 
 func getGithubReleaseWorkspace() (dir string) {

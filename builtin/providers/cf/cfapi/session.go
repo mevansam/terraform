@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -99,7 +100,9 @@ func (s *Session) initCliConnection(
 	skipSslValidation bool) (err error) {
 
 	envDialTimeout := os.Getenv("CF_DIAL_TIMEOUT")
-	s.Log = NewLogger(strings.ToLower(os.Getenv("CF_DEBUG")) == "true", os.Getenv("CF_TRACE"))
+
+	debug, _ := strconv.ParseBool(os.Getenv("CF_DEBUG"))
+	s.Log = NewLogger(debug, os.Getenv("CF_TRACE"))
 
 	s.config = coreconfig.NewRepositoryFromPersistor(&noopPersistor{}, func(err error) {
 		if err != nil {
@@ -108,7 +111,7 @@ func (s *Session) initCliConnection(
 		}
 	})
 	if i18n.T == nil {
-		i18n.T = i18n.Init(s.config.(i18n.LocalReader))
+		i18n.T = i18n.Init(s.config)
 	}
 	s.config.SetSSLDisabled(skipSslValidation)
 
@@ -201,14 +204,16 @@ func (s *Session) initCliConnection(
 	if err != nil {
 		return err
 	}
-	s.appManager, err = newAppManager(s.config, s.ccGateway, s.Log)
-	if err != nil {
-		return err
-	}
 	s.routeManager, err = newRouteManager(s.config, s.ccGateway, s.Log)
 	if err != nil {
 		return err
 	}
+
+	s.appManager, err = newAppManager(s.config, s.ccGateway, s.domainManager.repo, s.routeManager.repo, s.Log)
+	if err != nil {
+		return err
+	}
+
 	return
 }
 
@@ -267,14 +272,14 @@ func (s *Session) BuildpackManager() *BuildpackManager {
 	return s.buildpackManager
 }
 
-// AppManager -
-func (s *Session) AppManager() *AppManager {
-	return s.appManager
-}
-
 // RouteManager -
 func (s *Session) RouteManager() *RouteManager {
 	return s.routeManager
+}
+
+// AppManager -
+func (s *Session) AppManager() *AppManager {
+	return s.appManager
 }
 
 // noopPersistor - No Op Persistor for CF CLI session

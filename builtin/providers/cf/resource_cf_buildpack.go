@@ -134,16 +134,16 @@ func resourceBuildpackCreate(d *schema.ResourceData, meta interface{}) (err erro
 	)
 	name = d.Get("name").(string)
 	if v, ok := d.GetOk("position"); ok {
-		s := v.(int)
-		position = &s
+		vv := v.(int)
+		position = &vv
 	}
 	if v, ok := d.GetOk("enabled"); ok {
-		b := v.(bool)
-		enabled = &b
+		vv := v.(bool)
+		enabled = &vv
 	}
 	if v, ok := d.GetOk("locked"); ok {
-		b := v.(bool)
-		locked = &b
+		vv := v.(bool)
+		locked = &vv
 	}
 
 	if v, ok := d.GetOk("url"); ok {
@@ -204,44 +204,19 @@ func resourceBuildpackUpdate(d *schema.ResourceData, meta interface{}) (err erro
 		position        *int
 		enabled, locked *bool
 
-		update bool
-
 		path       string
 		repository repo.Repository
 
 		bp cfapi.CCBuildpack
 	)
 
-	if d.HasChange("name") {
-		name = d.Get("name").(string)
-		update = true
-	} else {
-		name = d.Get("name").(string)
-	}
-	if d.HasChange("position") {
-		s := d.Get("position").(int)
-		position = &s
-		update = true
-	} else if v, ok := d.GetOk("position"); ok {
-		s := v.(int)
-		position = &s
-	}
-	if d.HasChange("enabled") {
-		b := d.Get("enabled").(bool)
-		enabled = &b
-		update = true
-	} else if v, ok := d.GetOk("enabled"); ok {
-		s := v.(bool)
-		enabled = &s
-	}
-	if d.HasChange("locked") {
-		b := d.Get("locked").(bool)
-		locked = &b
-		update = true
-	} else if v, ok := d.GetOk("locked"); ok {
-		s := v.(bool)
-		locked = &s
-	}
+	update := false
+
+	name = *getChangedValueString("name", &update, d)
+	position = getChangedValueInt("position", &update, d)
+	enabled = getChangedValueBool("enabled", &update, d)
+	locked = getChangedValueBool("locked", &update, d)
+
 	if update {
 		if bp, err = bpm.UpdateBuildpack(id, name, position, enabled, locked); err != nil {
 			return

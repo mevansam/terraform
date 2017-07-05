@@ -156,13 +156,13 @@ func testAccCheckBuildpackExists(refBuildpack, bpFilename string) resource.TestC
 		if err := assertEquals(attributes, "name", bp.Name); err != nil {
 			return err
 		}
-		if err := assertEquals(attributes, "position", fmt.Sprintf("%d", *bp.Position)); err != nil {
+		if err := assertEquals(attributes, "position", bp.Position); err != nil {
 			return err
 		}
-		if err := assertEquals(attributes, "locked", fmt.Sprintf("%t", *bp.Locked)); err != nil {
+		if err := assertEquals(attributes, "locked", bp.Locked); err != nil {
 			return err
 		}
-		if err := assertEquals(attributes, "enabled", fmt.Sprintf("%t", *bp.Enabled)); err != nil {
+		if err := assertEquals(attributes, "enabled", bp.Enabled); err != nil {
 			return err
 		}
 		if bp.Filename != bpFilename {

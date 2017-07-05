@@ -92,6 +92,7 @@ The following arguments are supported:
   - `quota` - (Required) The ID of the quota to apply to the personal org
 
 * `orgs` - (Optional) List of [orgs](org.html) this users will be a associated with as '`members`'.
+
 ## Attributes Reference
 
 The following attributes are exported:

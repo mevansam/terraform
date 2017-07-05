@@ -34,7 +34,7 @@ func testClone(workspace string, t *testing.T) {
 	readMeContent, err := ioutil.ReadFile(path + "/README.md")
 	checkError(t, err)
 
-	matched, err := regexp.Match("\\nRepo for testing git client apps\\n", readMeContent)
+	matched, err := regexp.Match("# Test App - a simple Go webapp\\n", readMeContent)
 	checkError(t, err)
 	if !matched {
 		fmt.Printf("Content of '%s/README.md'\n==>\n%s\n<==\n", path, string(readMeContent))
@@ -66,7 +66,7 @@ func testBranchedContent(workspace string, t *testing.T) {
 	readMeContent, err := ioutil.ReadFile(path + "/README.md")
 	checkError(t, err)
 
-	matched, err := regexp.Match("\\nRepo for testing git client apps --> branch test1\\n", readMeContent)
+	matched, err := regexp.Match("# Test App - a simple Go webapp in branch test1\\n", readMeContent)
 	checkError(t, err)
 	if !matched {
 		fmt.Printf("Content of '%s/README.md'\n==>\n%s\n<==\n", path, string(readMeContent))
@@ -79,7 +79,7 @@ func testBranchedContent(workspace string, t *testing.T) {
 	readMeContent, err = ioutil.ReadFile(path + "/README.md")
 	checkError(t, err)
 
-	matched, err = regexp.Match("\\nRepo for testing git client apps --> branch test2:2\\n", readMeContent)
+	matched, err = regexp.Match("# Test App - a simple Go webapp in branch test2\\n", readMeContent)
 	checkError(t, err)
 	if !matched {
 		fmt.Printf("Content of '%s/README.md'\n==>\n%s\n<==\n", path, string(readMeContent))
@@ -93,13 +93,13 @@ func testTaggedContent(workspace string, t *testing.T) {
 	gitRepo := getGitRepo(workspace, t)
 	path := gitRepo.GetPath()
 
-	err := gitRepo.SetVersion("t1", repo.GitVersionTypeTag)
+	err := gitRepo.SetVersion("v0.0_test2", repo.GitVersionTypeTag)
 	checkError(t, err)
 
 	readMeContent, err := ioutil.ReadFile(path + "/README.md")
 	checkError(t, err)
 
-	matched, err := regexp.Match("\\nRepo for testing git client apps --> branch test2\\n", readMeContent)
+	matched, err := regexp.Match("# Test App - a simple Go webapp in branch test2 - v0.0_test2\\n", readMeContent)
 	checkError(t, err)
 	if !matched {
 		fmt.Printf("Content of '%s/README.md'\n==>\n%s\n<==\n", path, string(readMeContent))
@@ -110,12 +110,12 @@ func testTaggedContent(workspace string, t *testing.T) {
 func getGitRepo(workspace string, t *testing.T) (gitRepo repo.Repository) {
 
 	repoManager := repo.NewRepoManager(workspace)
-	gitRepo, err := repoManager.GetGitRepository("https://github.com/mevansam/test_repo.git", nil, nil, nil)
+	gitRepo, err := repoManager.GetGitRepository("https://github.com/mevansam/test-app.git", nil, nil, nil)
 	checkError(t, err)
 
 	path := gitRepo.GetPath()
-	if filepath.Base(path) != "test_repo" {
-		t.Fatalf("repo path '%s' does not have a base folder 'test_repo'\n", path)
+	if filepath.Base(path) != "test-app" {
+		t.Fatalf("repo path '%s' does not have a base folder 'test-app'\n", path)
 	}
 
 	if _, err := os.Stat(path + "/LICENSE"); os.IsNotExist(err) {

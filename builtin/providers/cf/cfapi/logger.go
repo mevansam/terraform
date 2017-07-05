@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"reflect"
-	"strings"
 	"time"
 
 	"github.com/kr/pretty"
@@ -15,9 +14,12 @@ import (
 
 // Logger -
 type Logger struct {
+	UI terminal.UI
+
 	TracePrinter trace.Printer
-	UI           terminal.UI
-	isDebug      bool
+	debugPrinter trace.Printer
+
+	isDebug bool
 }
 
 // NewLogger -
@@ -25,12 +27,15 @@ func NewLogger(debug bool, tracePath string) *Logger {
 
 	l := &Logger{}
 
-	if strings.ToLower(tracePath) == "true" {
-		l.TracePrinter = trace.NewLogger(os.Stdout, true, "", "")
-	} else if len(tracePath) > 0 {
-		l.TracePrinter = trace.NewLogger(os.Stdout, true, tracePath, "")
+	if len(tracePath) > 0 {
+		l.TracePrinter = trace.NewLogger(os.Stdout, false, tracePath)
 	} else {
-		l.TracePrinter = trace.NewLogger(os.Stdout, debug, "", "")
+		l.TracePrinter = trace.NewLogger(os.Stdout, false)
+	}
+	if debug && !trace.LoggingToStdout {
+		l.debugPrinter = trace.CombinePrinters([]trace.Printer{l.TracePrinter, trace.NewWriterPrinter(os.Stdout, true)})
+	} else {
+		l.debugPrinter = l.TracePrinter
 	}
 
 	l.UI = terminal.NewUI(os.Stdin, os.Stdout, terminal.NewTeePrinter(os.Stdout), l.TracePrinter)
@@ -41,7 +46,7 @@ func NewLogger(debug bool, tracePath string) *Logger {
 
 // LogMessage -
 func (l *Logger) LogMessage(format string, v ...interface{}) {
-	l.TracePrinter.Printf(format, v)
+	l.debugPrinter.Printf(format, v)
 }
 
 // DebugMessage -
@@ -61,6 +66,6 @@ func (l *Logger) DebugMessage(format string, v ...interface{}) {
 			}
 		}
 		hdr := terminal.HeaderColor(fmt.Sprintf("[%s] DEBUG:", time.Now().Format(time.RFC3339)))
-		l.TracePrinter.Printf(fmt.Sprintf("%s %s", hdr, format), vv...)
+		l.debugPrinter.Printf(fmt.Sprintf("%s %s", hdr, format), vv...)
 	}
 }

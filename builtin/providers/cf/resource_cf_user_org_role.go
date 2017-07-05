@@ -127,7 +127,7 @@ func resourceUserOrgRoleUpdate(d *schema.ResourceData, meta interface{}) error {
 	userID := getUserIDFromUORID(d.Id())
 
 	oldOrgRoles, newOrgRoles := d.GetChange("role")
-	orgsRolesToDelete, orgsRolesToAdd := getListChangedSchemaLists(oldOrgRoles, newOrgRoles)
+	orgsRolesToDelete, orgsRolesToAdd := getListChangedSchemaLists(oldOrgRoles.(*schema.Set).List(), newOrgRoles.(*schema.Set).List())
 
 	if len(orgsRolesToDelete) > 0 || len(orgsRolesToAdd) > 0 {
 		om := session.OrgManager()

@@ -188,7 +188,7 @@ func checkEvgExists(resource string) resource.TestCheckFunc {
 			resource, attributes)
 
 		variables, err := session.EVGManager().GetEVG(id)
-		if err := asserMapEquals("variables", attributes, variables); err != nil {
+		if err := assertMapEquals("variables", attributes, variables); err != nil {
 			return err
 		}
 		return nil

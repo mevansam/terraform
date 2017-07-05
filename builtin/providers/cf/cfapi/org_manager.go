@@ -130,6 +130,9 @@ func (om *OrgManager) CreateOrg(name string, quotaID string) (org CCOrg, err err
 func (om *OrgManager) UpdateOrg(org CCOrg) (err error) {
 
 	body, err := json.Marshal(org)
+	if err != nil {
+		return
+	}
 
 	request, err := om.ccGateway.NewRequest("PUT",
 		fmt.Sprintf("%s/v2/organizations/%s", om.apiEndpoint, org.ID),
