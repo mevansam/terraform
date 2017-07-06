@@ -15,6 +15,12 @@
 			"revisionTime": "2017-01-18T16:13:56Z"
 		},
 		{
+			"checksumSHA1": "jR6tRgiSNgZvgQBGnlpyr9Lmt80=",
+			"path": "code.cloudfoundry.org/cli",
+			"revision": "02bcae3a7d69e43c881fdea9322e17d48eeb2e28",
+			"revisionTime": "2017-07-03T18:54:24Z"
+		},
+		{
 			"checksumSHA1": "/r8pftVJrTfr6L1z2Hr8zTT4UWk=",
 			"path": "code.cloudfoundry.org/cli/cf",
 			"revision": "755844f278fca86abf00f4ccda0f04b0301f5af9",
