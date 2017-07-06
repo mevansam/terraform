@@ -38,9 +38,9 @@ type UAAUserResourceName struct {
 
 type UAAUserResource struct {
 	Username string                 `json:"userName"`
+	Emails   []UAAUserResourceEmail `json:"emails"`
 	Password string                 `json:"password"`
-	Name     UAAUserResourceName    `json:"name,omitempty"`
-	Emails   []UAAUserResourceEmail `json:"emails,omitempty"`
+	Name     UAAUserResourceName    `json:"name"`
 }
 
 func NewUAAUserResource(username, password string) UAAUserResource {
