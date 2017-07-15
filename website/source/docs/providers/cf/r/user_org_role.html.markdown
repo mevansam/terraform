@@ -57,6 +57,6 @@ The following arguments are supported:
       + ***manager***: Org Managers are managers or other users who need to administer the org.
       + ***billing_manager***:  Org Billing Managers create and manage billing account and payment information.
       + ***auditor***: Org Auditors view but cannot edit user information and org quota usage information.
-      + ***member***: (Default) A member of the Org with no specific access rights. These user need to be granted a role by an Org Manager. If the user will only have a Space role then he/she needs to be associated with the Org using this role before a Space role can be assigned.
+      + ***member***: (Default) A member of the Org with no specific access rights. This user will need to be granted a role by an Org Manager. If the user should only have a Space role then he/she needs to be associated with the Org using this role before a Space role can be assigned.
 
   - `org` - (Required) The Org ID to associated

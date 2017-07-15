@@ -13,6 +13,7 @@ import (
 	awsprovider "github.com/hashicorp/terraform/builtin/providers/aws"
 	azureprovider "github.com/hashicorp/terraform/builtin/providers/azure"
 	azurermprovider "github.com/hashicorp/terraform/builtin/providers/azurerm"
+	bigipprovider "github.com/hashicorp/terraform/builtin/providers/bigip"
 	bitbucketprovider "github.com/hashicorp/terraform/builtin/providers/bitbucket"
 	chefprovider "github.com/hashicorp/terraform/builtin/providers/chef"
 	circonusprovider "github.com/hashicorp/terraform/builtin/providers/circonus"
@@ -95,6 +96,7 @@ var InternalProviders = map[string]plugin.ProviderFunc{
 	"aws":          awsprovider.Provider,
 	"azure":        azureprovider.Provider,
 	"azurerm":      azurermprovider.Provider,
+	"bigip":        bigipprovider.Provider,
 	"bitbucket":    bitbucketprovider.Provider,
 	"chef":         chefprovider.Provider,
 	"circonus":     circonusprovider.Provider,
