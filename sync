@@ -10,25 +10,38 @@ if [[ -z $1 ]] || [[ $1 == master ]]; then
     git push
 fi
 
-if [[ -z $1 ]] || [[ $1 == cf ]]; then
-    git checkout ab_cf_provider_v2
-    git rebase -s recursive -X theirs master
-    git pull --strategy-option theirs
-    # git push
-fi
+# if [[ -z $1 ]] || [[ $1 == cf ]]; then
+#     git checkout ab_cf_provider_v2
+#     git rebase -s recursive -X theirs master
+#     git pull --strategy-option theirs
+#     # git push
+# fi
 
-if [[ -z $1 ]] || [[ $1 == bigip ]]; then
-    git checkout ab_bigip_provider
-    git rebase -s recursive -X theirs master
-    git pull --strategy-option theirs
-    # git push
-fi
+# if [[ -z $1 ]] || [[ $1 == bigip ]]; then
+#     git checkout ab_bigip_provider
+#     git rebase -s recursive -X theirs master
+#     git pull --strategy-option theirs
+#     # git push
+# fi
 
 if [[ -z $1 ]] || [[ $1 == publish ]]; then
     git checkout ab_dev_release
-    git merge --strategy-option theirs ab_cf_provider_v2
-    git merge --strategy-option theirs ab_bigip_provider
-    git push -u publish ab_dev_release:master
+
+    # Update docs
+    rm -fr website/source/docs/providers/cf/
+    cp -r ../../terraform-providers/terraform-provider-cloudfoundry/website/docs/ website/source/docs/providers/cf/
+    cp ../../terraform-providers/terraform-provider-cloudfoundry/website/cloudfoundry.erb website/source/layouts/cf.erb
+    
+    for f in $(git ls-files --others --exclude-standard); do
+        git add $f
+        git commit -m "cloudfoundry documentation added" $f
+    done
+    for f in $(git diff --name-only); do 
+        git commit -m "cloudfoundry documentation updated" $f
+    done
+
+    git push -u origin ab_dev_release
+    git push publish ab_dev_release:master
 else
     git checkout ab_dev_release
 fi
