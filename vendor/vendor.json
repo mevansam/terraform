@@ -423,7 +423,7 @@
 			"revisionTime": "2017-01-11T11:52:28Z"
 		},
 		{
-			"checksumSHA1": "N92Zji40JkCHAnsCNHTP4iKPz88=",
+			"checksumSHA1": "cmMpbgzcc+qBJOOO80ZmgLdij5I=",
 			"comment": "v2.1.1-beta-8-gca4d906",
 			"path": "github.com/Azure/azure-sdk-for-go/arm/cdn",
 			"revision": "5841475edc7c8725d79885d635aa8956f97fdf0e",
@@ -3674,10 +3674,16 @@
 			"revisionTime": "2013-07-02T22:55:49Z"
 		},
 		{
-			"checksumSHA1": "IayNFtJddwiBZd0tSs/S+Xlmae0=",
+			"checksumSHA1": "gWqVEuA9e423fl8GX2zrylOKcxs=",
+			"path": "github.com/terraform-providers/terraform-provider-cloudfoundry",
+			"revision": "c371bff14901fc8bf2474cfc72678bcf010b8f19",
+			"revisionTime": "2017-07-26T12:15:45Z"
+		},
+		{
+			"checksumSHA1": "1qjLTNJQig6YP2ZCStRRbek0sck=",
 			"path": "github.com/terraform-providers/terraform-provider-cloudfoundry/cloudfoundry",
-			"revision": "ab78cf5cc36dd1b3756743ac9dae5c9487e4e775",
-			"revisionTime": "2017-07-15T05:52:19Z"
+			"revision": "c371bff14901fc8bf2474cfc72678bcf010b8f19",
+			"revisionTime": "2017-07-26T12:15:45Z"
 		},
 		{
 			"checksumSHA1": "8XKo6EsH4DPlTo6braAIT8W5DmA=",
